@@ -7,23 +7,17 @@ import {
   Platform,
   ScrollView,
 } from 'react-native';
+import TodoItem from '../components/TodoItem';
 import MenuBullet from '../icons/MenuBullet';
 import MenuBurger from '../icons/MenuBurger';
 
 export default function Home() {
   return (
     <SafeAreaView style={styles.wrapper}>
-      <View style={styles.header}>
-        <Text style={styles.headerText}>Todo List Title</Text>
-      </View>
       <ScrollView>
+        <Text style={styles.headerText}>Todo List Title</Text>
         {[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1].map((el, i) => (
-          <Text key={i}>
-            {el} Lorem ipsum dolor sit amet consectetur adipisicing elit.
-            Temporibus at esse labore quidem. At adipisci ipsum maiores sunt
-            libero dolorem provident dolores nulla, ullam, ab placeat est
-            doloribus nostrum quam.
-          </Text>
+          <TodoItem key={i} name={`Todo ${i + 1}`} />
         ))}
       </ScrollView>
       <View style={styles.footer}>
@@ -43,11 +37,10 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: Platform.OS === 'android' ? 25 : 0,
   },
-  header: {
+  headerText: {
     paddingLeft: 64,
     paddingTop: 14,
-  },
-  headerText: {
+    paddingBottom: 20,
     fontSize: 32,
   },
   footer: {
