@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   SafeAreaView,
   Text,
@@ -8,8 +8,9 @@ import {
   ScrollView,
   TouchableHighlight,
   Dimensions,
-  Modal,
-  Pressable,
+  TextInput,
+  KeyboardAvoidingView,
+  TouchableOpacity,
 } from 'react-native';
 import SimpleModal from '../components/SimpleModal';
 import TodoItem from '../components/TodoItem';
@@ -17,7 +18,23 @@ import MenuBullet from '../icons/MenuBullet';
 import MenuBurger from '../icons/MenuBurger';
 
 export default function Home() {
+  const [newTodoText, setNewTodoText] = useState('');
   const [addModalVisible, setAddModalVisible] = useState(false);
+  const modalInput = useRef<TextInput>(null);
+
+  useEffect(() => {
+    if (addModalVisible) {
+      setTimeout(() => {
+        modalInput.current?.focus();
+      }, 100);
+    }
+  }, [addModalVisible]);
+
+  const [todos, setTodos] = useState([
+    {
+      value: 'Lorem ipsum',
+    },
+  ]);
 
   return (
     <SafeAreaView style={styles.wrapper}>
@@ -25,19 +42,47 @@ export default function Home() {
         closeFunction={() => setAddModalVisible(false)}
         visible={addModalVisible}
       >
-        <View style={styles.addModal}>
-          <Text>Modal</Text>
-        </View>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'position' : 'height'}
+          contentContainerStyle={styles.addModal}
+          style={styles.addModal}
+        >
+          <TextInput
+            placeholder="New task"
+            ref={modalInput}
+            style={styles.modalInput}
+            onChangeText={(text) => setNewTodoText(text)}
+            value={newTodoText}
+          />
+          <TouchableOpacity
+            style={styles.saveButtonWrapper}
+            disabled={!newTodoText}
+            onPress={() => {
+              setTodos([{ value: newTodoText }, ...todos]);
+              setNewTodoText('');
+              setAddModalVisible(false);
+            }}
+          >
+            <Text
+              style={[
+                styles.saveButton,
+                newTodoText ? {} : styles.saveButtonDisabled,
+              ]}
+            >
+              Save
+            </Text>
+          </TouchableOpacity>
+        </KeyboardAvoidingView>
       </SimpleModal>
       <ScrollView>
         <Text style={styles.headerText}>Todo List Title</Text>
-        {[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1].map((el, i) => (
-          <TodoItem key={i} name={`Todo ${i + 1}`} />
+        {todos.map((el, i) => (
+          <TodoItem key={i} name={el.value} />
         ))}
       </ScrollView>
       <View style={styles.footer}>
-        <MenuBurger height={22} width={22} color="gray" />
-        <MenuBullet height={24} width={24} color="gray" />
+        <MenuBurger height={22} width={22} color="#646567" />
+        <MenuBullet height={24} width={24} color="#646567" />
       </View>
       <TouchableHighlight
         underlayColor="#EEF8FC"
@@ -101,13 +146,34 @@ const styles = StyleSheet.create({
     fontSize: 40,
     lineHeight: 60,
     bottom: 2,
-    color: '#25A0D0',
+    color: '#2373E6',
   },
   addModal: {
     height: 132,
     width: '100%',
     backgroundColor: 'white',
+    borderTopStartRadius: 5,
+    borderTopEndRadius: 5,
     position: 'absolute',
     bottom: 0,
+  },
+  modalInput: {
+    color: 'black',
+    fontSize: 16,
+    padding: 20,
+  },
+  saveButtonWrapper: {
+    backgroundColor: 'white',
+    paddingRight: 25,
+    paddingBottom: 40,
+  },
+  saveButton: {
+    color: '#2373E6',
+    fontSize: 16,
+    fontWeight: 'bold',
+    alignSelf: 'flex-end',
+  },
+  saveButtonDisabled: {
+    color: '#B7B7B7',
   },
 });
