@@ -11,6 +11,7 @@ import {
   TextInput,
   KeyboardAvoidingView,
   TouchableOpacity,
+  Animated,
 } from 'react-native';
 import SimpleModal from '../components/SimpleModal';
 import TodoItem from '../components/TodoItem';
@@ -33,6 +34,8 @@ export default function Home() {
   const [todos, setTodos] = useState([
     {
       value: 'Lorem ipsum',
+      animated: true,
+      createdAt: new Date(),
     },
   ]);
 
@@ -58,7 +61,10 @@ export default function Home() {
             style={styles.saveButtonWrapper}
             disabled={!newTodoText}
             onPress={() => {
-              setTodos([{ value: newTodoText }, ...todos]);
+              setTodos([
+                { value: newTodoText, animated: true, createdAt: new Date() },
+                ...todos.map((el) => ({ ...el, animated: false })),
+              ]);
               setNewTodoText('');
               setAddModalVisible(false);
             }}
@@ -77,7 +83,7 @@ export default function Home() {
       <ScrollView>
         <Text style={styles.headerText}>Todo List Title</Text>
         {todos.map((el, i) => (
-          <TodoItem key={i} name={el.value} />
+          <TodoItem key={todos.length - i} name={el.value} />
         ))}
       </ScrollView>
       <View style={styles.footer}>
