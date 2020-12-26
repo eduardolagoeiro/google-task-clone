@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   SafeAreaView,
   Text,
@@ -8,15 +8,27 @@ import {
   ScrollView,
   TouchableHighlight,
   Dimensions,
-  Alert,
+  Modal,
+  Pressable,
 } from 'react-native';
+import SimpleModal from '../components/SimpleModal';
 import TodoItem from '../components/TodoItem';
 import MenuBullet from '../icons/MenuBullet';
 import MenuBurger from '../icons/MenuBurger';
 
 export default function Home() {
+  const [addModalVisible, setAddModalVisible] = useState(false);
+
   return (
     <SafeAreaView style={styles.wrapper}>
+      <SimpleModal
+        closeFunction={() => setAddModalVisible(false)}
+        visible={addModalVisible}
+      >
+        <View style={styles.addModal}>
+          <Text>Modal</Text>
+        </View>
+      </SimpleModal>
       <ScrollView>
         <Text style={styles.headerText}>Todo List Title</Text>
         {[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1].map((el, i) => (
@@ -30,7 +42,7 @@ export default function Home() {
       <TouchableHighlight
         underlayColor="#EEF8FC"
         style={styles.addIcon}
-        onPress={() => Alert.alert('oi')}
+        onPress={() => setAddModalVisible(true)}
         hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
       >
         <Text style={styles.addIconText}>+</Text>
@@ -90,5 +102,12 @@ const styles = StyleSheet.create({
     lineHeight: 60,
     bottom: 2,
     color: '#25A0D0',
+  },
+  addModal: {
+    height: 132,
+    width: '100%',
+    backgroundColor: 'white',
+    position: 'absolute',
+    bottom: 0,
   },
 });
