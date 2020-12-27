@@ -15,8 +15,10 @@ yarn start
 * [x] checkbox
 * [x] checkbox animation
 * [ ] persist todo list
-* [ ] backend web api
-* [ ] api integration
+* [ ] todo check remove animation
+* [ ] done todo list
+* [ ] empty todo list view
+* [ ] toast todo undo
 * [ ] menu click
 * [ ] add new list
 * [ ] rename list
