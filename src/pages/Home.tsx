@@ -12,21 +12,68 @@ import {
   KeyboardAvoidingView,
   TouchableOpacity,
   Animated,
+  Pressable,
 } from 'react-native';
 import SimpleModal from '../components/SimpleModal';
 import TodoItem from '../components/TodoItem';
 import MenuBullet from '../icons/MenuBullet';
 import MenuBurger from '../icons/MenuBurger';
 
-export default function Home() {
+export default function Home(props: {
+  todos: Todo[];
+  persistTodos: (todos: Todo[]) => Promise<void>;
+}) {
+  const addTodoEffectTime = 150;
   const [newTodoText, setNewTodoText] = useState('');
   const [addModalVisible, setAddModalVisible] = useState(false);
   const modalInput = useRef<TextInput>(null);
-  const [todos, setTodos] = useState<Todo[]>([]);
+  const [todos, setTodos] = useState(props.todos);
 
   const [fadeInValue] = useState(new Animated.Value(0));
   const [translateValue] = useState(new Animated.Value(0));
-  useEffect(() => {
+
+  const [undoModalVisible, setUndoModalVisible] = useState(false);
+  const [fadeInUndoModal] = useState(new Animated.Value(0));
+  const [
+    undoModalVisibleTimeout,
+    setUndoModalVisibleTimeout,
+  ] = useState<NodeJS.Timeout>();
+
+  function toggleDone(todoId: number) {
+    setUndoModalVisible(true);
+    if (undoModalVisibleTimeout) clearTimeout(undoModalVisibleTimeout);
+    setUndoModalVisibleTimeout(
+      setTimeout(() => {
+        // setTodos(
+        //   todos.map((todo) => ({
+        //     ...todo,
+        //     done: todo.id === todoId ? !todo.done : todo.done,
+        //   }))
+        // );
+        setUndoModalVisible(false);
+      }, 2000)
+    );
+    Animated.sequence([
+      Animated.timing(fadeInUndoModal, {
+        duration: 0,
+        toValue: 0,
+        useNativeDriver: true,
+      }),
+      Animated.timing(fadeInUndoModal, {
+        duration: 200,
+        toValue: 1,
+        useNativeDriver: true,
+      }),
+    ]).start();
+    setTodos(
+      todos.map((todo) => ({
+        ...todo,
+        doneEffect: todo.id === todoId || false,
+      }))
+    );
+  }
+
+  function animateAddTodos() {
     Animated.sequence([
       Animated.timing(fadeInValue, {
         duration: 0,
@@ -51,6 +98,10 @@ export default function Home() {
         useNativeDriver: true,
       }),
     ]).start();
+  }
+
+  useEffect(() => {
+    props.persistTodos(todos);
   }, [todos]);
 
   useEffect(() => {
@@ -60,6 +111,10 @@ export default function Home() {
       }, 100);
     }
   }, [addModalVisible]);
+
+  function notDoneFilter(todos: Todo[]): Todo[] {
+    return todos.filter((el) => !el.done);
+  }
 
   return (
     <SafeAreaView style={styles.wrapper}>
@@ -84,9 +139,15 @@ export default function Home() {
             disabled={!newTodoText}
             onPress={() => {
               setTodos([
-                { value: newTodoText },
+                {
+                  value: newTodoText,
+                  done: false,
+                  id: parseInt(Math.random().toFixed(10).substring(2)),
+                  doneEffect: false,
+                },
                 ...todos.map((el) => ({ ...el })),
               ]);
+              animateAddTodos();
               setNewTodoText('');
               setAddModalVisible(false);
             }}
@@ -104,16 +165,20 @@ export default function Home() {
       </SimpleModal>
       <ScrollView>
         <Text style={styles.headerText}>Todo List Title</Text>
-        {todos.length > 0 ? (
+        {notDoneFilter(todos).length > 0 ? (
           <>
             <Animated.View
               style={{
                 opacity: fadeInValue,
               }}
             >
-              <TodoItem todo={todos[0]} />
+              <TodoItem
+                doneEffectTime={addTodoEffectTime}
+                todo={notDoneFilter(todos)[0]}
+                toggleDone={() => toggleDone(0)}
+              />
             </Animated.View>
-            {todos.length > 1 ? (
+            {notDoneFilter(todos).length > 1 ? (
               <Animated.View
                 style={{
                   transform: [
@@ -122,9 +187,16 @@ export default function Home() {
                   ],
                 }}
               >
-                {todos.slice(1, todos.length).map((el, i) => (
-                  <TodoItem key={i} todo={el} />
-                ))}
+                {notDoneFilter(todos)
+                  .slice(1, notDoneFilter(todos).length)
+                  .map((el, i) => (
+                    <TodoItem
+                      doneEffectTime={addTodoEffectTime}
+                      key={i}
+                      todo={el}
+                      toggleDone={() => toggleDone(el.id)}
+                    />
+                  ))}
               </Animated.View>
             ) : null}
           </>
@@ -144,6 +216,43 @@ export default function Home() {
       >
         <Text style={styles.addIconText}>+</Text>
       </TouchableHighlight>
+      {undoModalVisible && (
+        <Animated.View
+          style={{
+            position: 'absolute',
+            bottom: 108,
+            width: '100%',
+            backgroundColor: 'black',
+            borderColor: 'transparent',
+            borderWidth: 0,
+            height: 50,
+            borderRadius: 3,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            paddingHorizontal: 20,
+            alignItems: 'center',
+            opacity: fadeInUndoModal,
+          }}
+        >
+          <Text
+            style={{
+              color: 'white',
+            }}
+          >
+            1 completed
+          </Text>
+          <Pressable onPress={() => {}}>
+            <Text
+              style={{
+                color: '#93AFEF',
+                fontWeight: 'bold',
+              }}
+            >
+              Undo
+            </Text>
+          </Pressable>
+        </Animated.View>
+      )}
     </SafeAreaView>
   );
 }

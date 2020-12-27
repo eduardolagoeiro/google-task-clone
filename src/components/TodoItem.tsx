@@ -5,22 +5,26 @@ import ExplosionEffect from './ExplosionEffect';
 
 interface TodoItemProps {
   todo: Todo;
+  doneEffectTime: number;
+  toggleDone: () => void;
 }
 
 export default function TodoItem(props: TodoItemProps) {
-  const [done, setDone] = useState(false);
   return (
     <View style={styles.wrapper}>
-      <TouchableWithoutFeedback onPress={() => setDone(!done)}>
+      <TouchableWithoutFeedback
+        onPress={props.toggleDone}
+        hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+      >
         <View
           style={{
             marginHorizontal: 24,
           }}
         >
-          {done ? (
+          {props.todo.doneEffect ? (
             <ExplosionEffect
               explosionRadius={10}
-              explosionTime={150}
+              explosionTime={props.doneEffectTime}
               innerRadius={15}
             >
               <Check width={20} height={20} color="#2373E6"></Check>

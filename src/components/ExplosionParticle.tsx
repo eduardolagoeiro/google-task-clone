@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Animated, StyleSheet, StyleSheetProperties } from 'react-native';
 
 interface ExplosionParticleProps {
@@ -15,7 +15,7 @@ export default function ExplosionParticle(props: ExplosionParticleProps) {
   const [translateX] = useState(new Animated.Value(props.translateXFrom || 0));
   const [translateY] = useState(new Animated.Value(props.translateYFrom || 0));
   const [opacity] = useState(new Animated.Value(1));
-  Animated.sequence([
+  const animation = Animated.sequence([
     Animated.parallel([
       Animated.timing(translateX, {
         duration: props.explosionTime || 0,
@@ -33,7 +33,8 @@ export default function ExplosionParticle(props: ExplosionParticleProps) {
       useNativeDriver: true,
       toValue: 0,
     }),
-  ]).start();
+  ]);
+  animation.start();
   return (
     <Animated.View
       style={[
