@@ -12,7 +12,6 @@ interface ExplosionParticleProps {
 }
 
 export default function ExplosionParticle(props: ExplosionParticleProps) {
-  const [height] = useState(new Animated.Value(3));
   const [translateX] = useState(new Animated.Value(props.translateXFrom || 0));
   const [translateY] = useState(new Animated.Value(props.translateYFrom || 0));
   const [opacity] = useState(new Animated.Value(1));
