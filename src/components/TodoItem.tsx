@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableWithoutFeedback } from 'react-native';
 import Check from '../icons/Check';
+import ExplosionEffect from './ExplosionEffect';
 
 interface TodoItemProps {
   todo: Todo;
@@ -17,7 +18,13 @@ export default function TodoItem(props: TodoItemProps) {
           }}
         >
           {done ? (
-            <Check width={20} height={20} color="#2373E6"></Check>
+            <ExplosionEffect
+              explosionRadius={10}
+              explosionTime={150}
+              innerRadius={15}
+            >
+              <Check width={20} height={20} color="#2373E6"></Check>
+            </ExplosionEffect>
           ) : (
             <View style={styles.checkbox} />
           )}
