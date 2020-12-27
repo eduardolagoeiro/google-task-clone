@@ -12,8 +12,8 @@ yarn start
 * [x] todo list
 * [x] push todo list
 * [x] push todo list animation
-* [ ] checkbox
-* [ ] checkbox animation
+* [x] checkbox
+* [x] checkbox animation
 * [ ] persist todo list
 * [ ] backend web api
 * [ ] api integration
