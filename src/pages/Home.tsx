@@ -22,6 +22,36 @@ export default function Home() {
   const [newTodoText, setNewTodoText] = useState('');
   const [addModalVisible, setAddModalVisible] = useState(false);
   const modalInput = useRef<TextInput>(null);
+  const [todos, setTodos] = useState<Todo[]>([]);
+
+  const [fadeInValue] = useState(new Animated.Value(0));
+  const [translateValue] = useState(new Animated.Value(0));
+  useEffect(() => {
+    Animated.sequence([
+      Animated.timing(fadeInValue, {
+        duration: 0,
+        toValue: 0,
+        useNativeDriver: true,
+      }),
+      Animated.timing(fadeInValue, {
+        duration: 500,
+        toValue: 1,
+        useNativeDriver: true,
+      }),
+    ]).start();
+    Animated.sequence([
+      Animated.timing(translateValue, {
+        duration: 0,
+        toValue: 0,
+        useNativeDriver: true,
+      }),
+      Animated.timing(translateValue, {
+        duration: 100,
+        toValue: 60,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [todos]);
 
   useEffect(() => {
     if (addModalVisible) {
@@ -30,14 +60,6 @@ export default function Home() {
       }, 100);
     }
   }, [addModalVisible]);
-
-  const [todos, setTodos] = useState([
-    {
-      value: 'Lorem ipsum',
-      animated: true,
-      createdAt: new Date(),
-    },
-  ]);
 
   return (
     <SafeAreaView style={styles.wrapper}>
@@ -62,8 +84,8 @@ export default function Home() {
             disabled={!newTodoText}
             onPress={() => {
               setTodos([
-                { value: newTodoText, animated: true, createdAt: new Date() },
-                ...todos.map((el) => ({ ...el, animated: false })),
+                { value: newTodoText },
+                ...todos.map((el) => ({ ...el })),
               ]);
               setNewTodoText('');
               setAddModalVisible(false);
@@ -82,9 +104,33 @@ export default function Home() {
       </SimpleModal>
       <ScrollView>
         <Text style={styles.headerText}>Todo List Title</Text>
-        {todos.map((el, i) => (
-          <TodoItem key={todos.length - i} name={el.value} />
-        ))}
+        {todos.length > 0 ? (
+          <>
+            <Animated.View
+              style={{
+                opacity: fadeInValue,
+              }}
+            >
+              <TodoItem todo={todos[0]} />
+            </Animated.View>
+            {todos.length > 1 ? (
+              <Animated.View
+                style={{
+                  transform: [
+                    { translateY: -60 },
+                    { translateY: translateValue },
+                  ],
+                }}
+              >
+                {todos.slice(1, todos.length).map((el, i) => (
+                  <TodoItem key={i} todo={el} />
+                ))}
+              </Animated.View>
+            ) : null}
+          </>
+        ) : (
+          <Text>Clique para adicionar tarefas</Text>
+        )}
       </ScrollView>
       <View style={styles.footer}>
         <MenuBurger height={22} width={22} color="#646567" />

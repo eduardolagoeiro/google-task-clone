@@ -1,25 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Animated } from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 
 interface TodoItemProps {
-  name: string;
+  todo: Todo;
 }
 
 export default function TodoItem(props: TodoItemProps) {
-  const [fadeAnim] = useState(new Animated.Value(0));
-  useEffect(() => {
-    Animated.timing(fadeAnim, {
-      duration: 500,
-      toValue: 1,
-      useNativeDriver: true,
-    }).start();
-  });
-
   return (
-    <Animated.View style={[styles.wrapper, { opacity: fadeAnim }]}>
+    <View style={styles.wrapper}>
       <View style={styles.checkbox} />
-      <Text style={styles.text}>{props.name}</Text>
-    </Animated.View>
+      <Text style={styles.text}>{props.todo.value}</Text>
+    </View>
   );
 }
 
