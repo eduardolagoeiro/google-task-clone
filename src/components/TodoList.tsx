@@ -1,57 +1,44 @@
-import React, { useEffect, useState } from 'react';
+import React, { memo, useState } from 'react';
 import { Animated, Text } from 'react-native';
 import TodoItem from './TodoItem';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function TodoList() {
+function TodoList(props: { todos: Todo[]; removeTodo: (id: number) => void }) {
   const [fadeInValue] = useState(new Animated.Value(0));
   const [translateValue] = useState(new Animated.Value(0));
   const addTodoEffectTime = 150;
 
-  Animated.sequence([
-    Animated.timing(fadeInValue, {
-      duration: 0,
-      toValue: 0,
-      useNativeDriver: true,
-    }),
-    Animated.timing(fadeInValue, {
-      duration: 500,
-      toValue: 1,
-      useNativeDriver: true,
-    }),
-  ]).start();
-  Animated.sequence([
-    Animated.timing(translateValue, {
-      duration: 0,
-      toValue: 0,
-      useNativeDriver: true,
-    }),
-    Animated.timing(translateValue, {
-      duration: 100,
-      toValue: 60,
-      useNativeDriver: true,
-    }),
-  ]).start();
+  if (!props.todos.find((todo) => todo.doneEffect)) {
+    Animated.sequence([
+      Animated.timing(fadeInValue, {
+        duration: 0,
+        toValue: 0,
+        useNativeDriver: true,
+      }),
+      Animated.timing(fadeInValue, {
+        duration: 500,
+        toValue: 1,
+        useNativeDriver: true,
+      }),
+    ]).start();
+    Animated.sequence([
+      Animated.timing(translateValue, {
+        duration: 0,
+        toValue: 0,
+        useNativeDriver: true,
+      }),
+      Animated.timing(translateValue, {
+        duration: 100,
+        toValue: 60,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }
 
-  const [todos, setTodos] = useState<Todo[]>([]);
-  const [loaded, setLoaded] = useState(false);
+  function toggleDone(id: number) {
+    props.removeTodo(id);
+  }
 
-  // useEffect(() => {
-  //   AsyncStorage.setItem('todo', JSON.stringify(todos));
-  // }, [todos]);
-
-  // useEffect(() => {
-  //   console.log('useEffect', loaded);
-  //   // if (!loaded) {
-  //   //   AsyncStorage.getItem('todo').then((todosStr) => {
-  //   //     setTodos(JSON.parse(todosStr) || []);
-  //   //     setLoaded(true);
-  //   //   });
-  //   // }
-  // }, []);
-
-  function toggleDone(id: number) {}
-  return todos.length > 0 ? (
+  return props.todos.length > 0 ? (
     <>
       <Animated.View
         style={{
@@ -60,17 +47,17 @@ export default function TodoList() {
       >
         <TodoItem
           doneEffectTime={addTodoEffectTime}
-          todo={todos[0]}
-          toggleDone={() => toggleDone(todos[0].id)}
+          todo={props.todos[0]}
+          toggleDone={() => toggleDone(props.todos[0].id)}
         />
       </Animated.View>
-      {todos.length > 1 && (
+      {props.todos.length > 1 && (
         <Animated.View
           style={{
             transform: [{ translateY: -60 }, { translateY: translateValue }],
           }}
         >
-          {todos.slice(1, todos.length).map((el, i) => (
+          {props.todos.slice(1, props.todos.length).map((el, i) => (
             <TodoItem
               doneEffectTime={addTodoEffectTime}
               key={i}
@@ -85,3 +72,7 @@ export default function TodoList() {
     <Text>Sem items</Text>
   );
 }
+
+export default memo(TodoList, (prevProps, nextProps) => {
+  return JSON.stringify(prevProps.todos) === JSON.stringify(nextProps.todos);
+});

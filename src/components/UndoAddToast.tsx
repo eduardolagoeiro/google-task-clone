@@ -1,8 +1,20 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text, Animated, Pressable } from 'react-native';
 
-export default function UndoAddToast() {
+export default function UndoAddToast(props: { close: () => void }) {
   const [fadeInUndoModal] = useState(new Animated.Value(0));
+  Animated.timing(fadeInUndoModal, {
+    duration: 200,
+    toValue: 1,
+    useNativeDriver: true,
+  }).start();
+
+  useEffect(() => {
+    const timeout = setTimeout(props.close, 2000);
+    return () => {
+      clearTimeout(timeout);
+    };
+  });
   return (
     <Animated.View
       style={{

@@ -11,6 +11,7 @@ import SimpleModal from './SimpleModal';
 
 export default function AddTodoModal(props: {
   closeModal: () => void;
+  createTodo: (value: string) => void;
   addModalVisible: boolean;
 }) {
   const [newTodoText, setNewTodoText] = useState('');
@@ -35,24 +36,15 @@ export default function AddTodoModal(props: {
           placeholder="New task"
           ref={modalInput}
           style={styles.modalInput}
-          onChangeText={(text) => setNewTodoText(text)}
+          onChangeText={setNewTodoText}
           value={newTodoText}
         />
         <TouchableOpacity
           style={styles.saveButtonWrapper}
           disabled={!newTodoText}
           onPress={() => {
-            // setTodos([
-            //   {
-            //     value: newTodoText,
-            //     done: false,
-            //     id: parseInt(Math.random().toFixed(10).substring(2)),
-            //     doneEffect: false,
-            //   },
-            //   ...todos.map((el) => ({ ...el })),
-            // ]);
-            // setNewTodoText('');
-            // setAddModalVisible(false);
+            props.createTodo(newTodoText);
+            setNewTodoText('');
           }}
         >
           <Text

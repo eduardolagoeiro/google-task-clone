@@ -13,18 +13,45 @@ import UndoAddToast from '../components/UndoAddToast';
 
 export default function Home() {
   const [addModalVisible, setAddModalVisible] = useState(false);
+  const [undoModalVisible, setUndoModalVisible] = useState(false);
+  const [todos, setTodos] = useState<Todo[]>([]);
   return (
     <SafeAreaView style={styles.wrapper}>
       <AddTodoModal
+        createTodo={(value) => {
+          setTodos([
+            {
+              value: value,
+              done: false,
+              id: parseInt(Math.random().toFixed(10).substring(2)),
+              doneEffect: false,
+            },
+            ...todos.map((el) => ({ ...el })),
+          ]);
+          setAddModalVisible(false);
+        }}
         addModalVisible={addModalVisible}
         closeModal={() => setAddModalVisible(false)}
       />
       <ScrollView>
         <Text style={styles.headerText}>Todo List Title</Text>
-        <TodoList />
+        <TodoList
+          todos={todos}
+          removeTodo={(todoId) => {
+            setTodos(
+              todos.map((todo) => ({
+                ...todo,
+                doneEffect: todo.id === todoId || false,
+              }))
+            );
+            setUndoModalVisible(true);
+          }}
+        />
       </ScrollView>
       <HomeFooter addHandler={() => setAddModalVisible(true)} />
-      {false && <UndoAddToast />}
+      {undoModalVisible && (
+        <UndoAddToast close={() => setUndoModalVisible(false)} />
+      )}
     </SafeAreaView>
   );
 }
