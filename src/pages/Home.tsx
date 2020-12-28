@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { useEffect, useState } from 'react';
 import {
   SafeAreaView,
   Text,
@@ -15,6 +16,16 @@ export default function Home() {
   const [addModalVisible, setAddModalVisible] = useState(false);
   const [undoModalVisible, setUndoModalVisible] = useState(false);
   const [todos, setTodos] = useState<Todo[]>([]);
+  useEffect(() => {
+    AsyncStorage.getItem('todos').then((todosStr) => {
+      setTodos(JSON.parse(todosStr || '[]'));
+    });
+  }, []);
+
+  useEffect(() => {
+    AsyncStorage.setItem('todos', JSON.stringify(todos));
+  }, [todos]);
+
   return (
     <SafeAreaView style={styles.wrapper}>
       <AddTodoModal
