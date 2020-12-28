@@ -16,6 +16,10 @@ export default function Home() {
   const [addModalVisible, setAddModalVisible] = useState(false);
   const [undoModalVisible, setUndoModalVisible] = useState(false);
   const [todos, setTodos] = useState<Todo[]>([]);
+  const [
+    timeoutUndoModal,
+    setTimeoutUndoModal,
+  ] = useState<NodeJS.Timeout | null>(null);
   useEffect(() => {
     AsyncStorage.getItem('todos').then((todosStr) => {
       setTodos(JSON.parse(todosStr || '[]'));
@@ -24,6 +28,17 @@ export default function Home() {
 
   useEffect(() => {
     AsyncStorage.setItem('todos', JSON.stringify(todos));
+    if (todos.find((todo) => todo.doneEffect)) {
+      if (timeoutUndoModal) clearTimeout(timeoutUndoModal);
+      setUndoModalVisible(true);
+      setTimeoutUndoModal(
+        setTimeout(() => {
+          setUndoModalVisible(false);
+          setTimeoutUndoModal(null);
+          setTodos(todos.filter((todo) => !todo.doneEffect));
+        }, 2000)
+      );
+    }
   }, [todos]);
 
   return (
@@ -52,16 +67,15 @@ export default function Home() {
             setTodos(
               todos.map((todo) => ({
                 ...todo,
-                doneEffect: todo.id === todoId || false,
+                doneEffect: todo.id === todoId || todo.doneEffect,
               }))
             );
-            setUndoModalVisible(true);
           }}
         />
       </ScrollView>
       <HomeFooter addHandler={() => setAddModalVisible(true)} />
       {undoModalVisible && (
-        <UndoAddToast close={() => setUndoModalVisible(false)} />
+        <UndoAddToast actionSize={todos.filter((el) => el.doneEffect).length} />
       )}
     </SafeAreaView>
   );
