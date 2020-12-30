@@ -14,11 +14,11 @@ yarn start
 * [x] push todo list animation
 * [x] checkbox
 * [x] checkbox animation
-* [ ] persist todo list
-* [ ] todo check remove animation
-* [ ] done todo list
+* [x] persist todo list
+* [x] todo check remove animation
+* [x] done todo list
 * [ ] empty todo list view
-* [ ] toast todo undo
+* [x] toast todo undo
 * [ ] menu click
 * [ ] add new list
 * [ ] rename list
