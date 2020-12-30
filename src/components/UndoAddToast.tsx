@@ -1,8 +1,20 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text, Animated, Pressable } from 'react-native';
 
-export default function UndoAddToast(props: { actionSize: number }) {
+export default function UndoAddToast(props: { close: () => void }) {
   const [fadeInUndoModal] = useState(new Animated.Value(0));
+  const [
+    timeoutUndoModal,
+    setTimeoutUndoModal,
+  ] = useState<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    setTimeoutUndoModal(setTimeout(props.close, 2000));
+    return () => {
+      if (timeoutUndoModal) clearTimeout(timeoutUndoModal);
+    };
+  }, []);
+
   Animated.timing(fadeInUndoModal, {
     duration: 200,
     toValue: 1,
@@ -31,7 +43,7 @@ export default function UndoAddToast(props: { actionSize: number }) {
           color: 'white',
         }}
       >
-        {props.actionSize} task done
+        1 task done
       </Text>
       <Pressable onPress={() => {}}>
         <Text

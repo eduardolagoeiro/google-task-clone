@@ -1,0 +1,3 @@
+interface HomeState {
+  todos: Todo[];
+}

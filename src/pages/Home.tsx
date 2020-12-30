@@ -1,81 +1,71 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   SafeAreaView,
   Text,
   StyleSheet,
   Platform,
   ScrollView,
+  LayoutAnimation,
 } from 'react-native';
 import AddTodoModal from '../components/AddTodoModal';
 import HomeFooter from '../components/HomeFooter';
 import TodoList from '../components/TodoList';
 import UndoAddToast from '../components/UndoAddToast';
+import HomeContext from '../state/home.context';
+import { addTodo, removeTodo, restoreState } from '../state/home.reducer';
 
 export default function Home() {
   const [addModalVisible, setAddModalVisible] = useState(false);
   const [undoModalVisible, setUndoModalVisible] = useState(false);
-  const [todos, setTodos] = useState<Todo[]>([]);
-  const [
-    timeoutUndoModal,
-    setTimeoutUndoModal,
-  ] = useState<NodeJS.Timeout | null>(null);
+  const { state, dispatch } = useContext(HomeContext);
   useEffect(() => {
     AsyncStorage.getItem('todos').then((todosStr) => {
-      setTodos(JSON.parse(todosStr || '[]'));
+      dispatch(restoreState(JSON.parse(todosStr || '[]')));
     });
   }, []);
 
-  useEffect(() => {
-    AsyncStorage.setItem('todos', JSON.stringify(todos));
-    if (todos.find((todo) => todo.doneEffect)) {
-      if (timeoutUndoModal) clearTimeout(timeoutUndoModal);
-      setUndoModalVisible(true);
-      setTimeoutUndoModal(
-        setTimeout(() => {
-          setUndoModalVisible(false);
-          setTimeoutUndoModal(null);
-          setTodos(todos.filter((todo) => !todo.doneEffect));
-        }, 2000)
+  function createTodo(value: string): void {
+    setAddModalVisible(false);
+    setTimeout(() => {
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+      dispatch(
+        addTodo({
+          value: value,
+          done: false,
+          id: parseInt(Math.random().toFixed(10).substring(2)),
+        })
       );
+    }, 200);
+  }
+  useEffect(() => {
+    if (undoModalVisible) {
+      setUndoModalVisible(true);
     }
-  }, [todos]);
+  }, [undoModalVisible]);
 
   return (
     <SafeAreaView style={styles.wrapper}>
       <AddTodoModal
-        createTodo={(value) => {
-          setTodos([
-            {
-              value: value,
-              done: false,
-              id: parseInt(Math.random().toFixed(10).substring(2)),
-              doneEffect: false,
-            },
-            ...todos.map((el) => ({ ...el })),
-          ]);
-          setAddModalVisible(false);
-        }}
+        createTodo={createTodo}
         addModalVisible={addModalVisible}
         closeModal={() => setAddModalVisible(false)}
       />
       <ScrollView>
         <Text style={styles.headerText}>Todo List Title</Text>
         <TodoList
-          todos={todos}
-          removeTodo={(todoId) => {
-            setTodos(
-              todos.map((todo) => ({
-                ...todo,
-                doneEffect: todo.id === todoId || todo.doneEffect,
-              }))
-            );
-          }}
+        // removeTodo={(todo) => {
+        //   setUndoModalVisible(true);
+        //   dispatch(removeTodo(todo));
+        //   LayoutAnimation.configureNext(
+        //     LayoutAnimation.Presets.easeInEaseOut
+        //   );
+        // }}
         />
       </ScrollView>
       <HomeFooter addHandler={() => setAddModalVisible(true)} />
       {undoModalVisible && (
-        <UndoAddToast actionSize={todos.filter((el) => el.doneEffect).length} />
+        <UndoAddToast close={() => setUndoModalVisible(false)} />
       )}
     </SafeAreaView>
   );
