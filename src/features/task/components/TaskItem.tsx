@@ -2,20 +2,20 @@ import React, { memo, useContext, useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableWithoutFeedback } from 'react-native';
 import Check from '../../icons/components/Check';
 import TaskContext from '../state/task.context';
-import { removeTodo } from '../state/task.reducer';
+import { removeTask } from '../state/task.reducer';
 import ExplosionEffect from '../../common/components/ExplosionEffect';
 
-interface TodoItemProps {
-  todo: Task;
+interface TaskItemProps {
+  task: Task;
   doneEffectTime: number;
 }
 
-function TodoItem(props: TodoItemProps) {
+function TaskItem(props: TaskItemProps) {
   const [doneEffect, setDoneEffect] = useState(false);
   const { dispatch } = useContext(TaskContext);
   useEffect(() => {
     if (doneEffect) {
-      setTimeout(() => dispatch(removeTodo(props.todo)), props.doneEffectTime);
+      setTimeout(() => dispatch(removeTask(props.task)), props.doneEffectTime);
     }
   }, [doneEffect]);
   return (
@@ -44,13 +44,13 @@ function TodoItem(props: TodoItemProps) {
           )}
         </View>
       </TouchableWithoutFeedback>
-      <Text style={styles.text}>{props.todo.value}</Text>
+      <Text style={styles.text}>{props.task.value}</Text>
     </View>
   );
 }
 
-export default memo(TodoItem, (prevProps, nextProps) => {
-  return prevProps.todo.id !== nextProps.todo.id;
+export default memo(TaskItem, (prevProps, nextProps) => {
+  return prevProps.task.id !== nextProps.task.id;
 });
 
 const styles = StyleSheet.create({

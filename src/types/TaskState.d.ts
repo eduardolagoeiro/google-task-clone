@@ -1,3 +1,3 @@
 interface TaskState {
-  todos: Task[];
+  tasks: Task[];
 }

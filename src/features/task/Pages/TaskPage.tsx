@@ -8,36 +8,29 @@ import {
   ScrollView,
   LayoutAnimation,
 } from 'react-native';
-import AddTodoModal from '../components/AddTodoModal';
+import AddTaskModal from '../components/AddTaskModal';
 import HomeFooter from '../components/HomeFooter';
-import TodoList from '../components/TaskList';
+import TaskList from '../components/TaskList';
 import UndoAddToast from '../components/UndoAddToast';
 import TaskContext from '../state/task.context';
-import { addTodo, removeTodo, restoreState } from '../state/task.reducer';
+import { addTask, removeTask, restoreState } from '../state/task.reducer';
 
-export default function TodoPage() {
+export default function TaskPage() {
   const [addModalVisible, setAddModalVisible] = useState(false);
   const [undoModalVisible, setUndoModalVisible] = useState(false);
   const { state, dispatch } = useContext(TaskContext);
   useEffect(() => {
-    AsyncStorage.getItem('todos').then((todosStr) => {
-      dispatch(restoreState(JSON.parse(todosStr || '[]')));
+    AsyncStorage.getItem('tasks').then((taskStr) => {
+      dispatch(restoreState(JSON.parse(taskStr || '[]')));
     });
   }, []);
 
-  function createTodo(value: string): void {
-    setAddModalVisible(false);
-    setTimeout(() => {
-      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-      dispatch(
-        addTodo({
-          value: value,
-          done: false,
-          id: parseInt(Math.random().toFixed(10).substring(2)),
-        })
-      );
-    }, 200);
-  }
+  // function createTodo(value: string): void {
+  //   setAddModalVisible(false);
+  //   setTimeout(() => {
+  //     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+  //   }, 200);
+  // }
   useEffect(() => {
     if (undoModalVisible) {
       setUndoModalVisible(true);
@@ -46,14 +39,13 @@ export default function TodoPage() {
 
   return (
     <SafeAreaView style={styles.wrapper}>
-      <AddTodoModal
-        createTodo={createTodo}
+      <AddTaskModal
         addModalVisible={addModalVisible}
         closeModal={() => setAddModalVisible(false)}
       />
       <ScrollView>
         <Text style={styles.headerText}>Todo List Title</Text>
-        <TodoList
+        <TaskList
         // removeTodo={(todo) => {
         //   setUndoModalVisible(true);
         //   dispatch(removeTodo(todo));

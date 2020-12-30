@@ -1,7 +1,7 @@
 import React from 'react';
 import { Platform, UIManager } from 'react-native';
 import HomeProvider from './src/features/task/state/task.provider';
-import TodoPage from './src/features/task/Pages/TaskPage';
+import TaskPage from './src/features/task/Pages/TaskPage';
 
 if (
   Platform.OS === 'android' &&
@@ -12,7 +12,7 @@ if (
 export default function App() {
   return (
     <HomeProvider>
-      <TodoPage />
+      <TaskPage />
     </HomeProvider>
   );
 }

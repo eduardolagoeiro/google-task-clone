@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -8,20 +8,18 @@ import {
   Platform,
 } from 'react-native';
 import SimpleModal from '../../common/components/SimpleModal';
+import TaskContext from '../state/task.context';
+import { addTask } from '../state/task.reducer';
 
-export default function AddTodoModal(props: {
+export default function AddTaskModal(props: {
   closeModal: () => void;
-  createTodo: (value: string) => void;
   addModalVisible: boolean;
 }) {
-  const [newTodoText, setNewTodoText] = useState('');
+  const [newTaskText, setNewTaskText] = useState('');
+
+  const { dispatch } = useContext(TaskContext);
 
   const modalInput = useRef<TextInput>(null);
-  if (props.addModalVisible) {
-    setTimeout(() => {
-      modalInput.current?.focus();
-    }, 100);
-  }
   return (
     <SimpleModal
       closeFunction={props.closeModal}
@@ -33,24 +31,31 @@ export default function AddTodoModal(props: {
         style={styles.addModal}
       >
         <TextInput
+          autoFocus={true}
           placeholder="New task"
           ref={modalInput}
           style={styles.modalInput}
-          onChangeText={setNewTodoText}
-          value={newTodoText}
+          onChangeText={setNewTaskText}
+          value={newTaskText}
         />
         <TouchableOpacity
           style={styles.saveButtonWrapper}
-          disabled={!newTodoText}
+          disabled={!newTaskText}
           onPress={() => {
-            props.createTodo(newTodoText);
-            setNewTodoText('');
+            dispatch(
+              addTask({
+                value: newTaskText,
+                done: false,
+                id: parseInt(Math.random().toFixed(10).substring(2)),
+              })
+            );
+            setNewTaskText('');
           }}
         >
           <Text
             style={[
               styles.saveButton,
-              newTodoText ? {} : styles.saveButtonDisabled,
+              newTaskText ? {} : styles.saveButtonDisabled,
             ]}
           >
             Save

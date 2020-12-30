@@ -3,15 +3,15 @@ import { Text, View } from 'react-native';
 import TaskContext from '../state/task.context';
 import TaskItem from './TaskItem';
 
-export default function TodoList() {
-  const addTodoEffectTime = 150;
+export default function TaskList() {
+  const addTaskEffectTime = 150;
 
   const { state } = useContext(TaskContext);
 
-  return state.todos.length > 0 ? (
+  return state.tasks.length > 0 ? (
     <View>
-      {state.todos.map((el, i) => (
-        <TaskItem doneEffectTime={addTodoEffectTime} key={el.id} todo={el} />
+      {state.tasks.map((el) => (
+        <TaskItem doneEffectTime={addTaskEffectTime} key={el.id} task={el} />
       ))}
     </View>
   ) : (
