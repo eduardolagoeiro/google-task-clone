@@ -13,9 +13,17 @@ interface TaskItemProps {
 function TaskItem(props: TaskItemProps) {
   const [doneEffect, setDoneEffect] = useState(false);
   const { dispatch } = useContext(TaskContext);
+
   useEffect(() => {
     if (doneEffect) {
-      setTimeout(() => dispatch(removeTask(props.task)), props.doneEffectTime);
+      setTimeout(() => {
+        dispatch(
+          removeTask(
+            props.task,
+            setTimeout(() => dispatch({ type: 'CLOSE_UNDO_MODAL' }), 2000)
+          )
+        );
+      }, props.doneEffectTime);
     }
   }, [doneEffect]);
   return (

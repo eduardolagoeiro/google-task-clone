@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -6,24 +6,37 @@ import {
   TextInput,
   TouchableOpacity,
   Platform,
+  Keyboard,
 } from 'react-native';
 import SimpleModal from '../../common/components/SimpleModal';
 import TaskContext from '../state/task.context';
 import { addTask } from '../state/task.reducer';
 
-export default function AddTaskModal(props: {
-  closeModal: () => void;
-  addModalVisible: boolean;
-}) {
+export default function AddTaskModal() {
   const [newTaskText, setNewTaskText] = useState('');
 
-  const { dispatch } = useContext(TaskContext);
+  const { state, dispatch } = useContext(TaskContext);
 
   const modalInput = useRef<TextInput>(null);
+
+  useEffect(() => {
+    if (state.isAddModalOpen) {
+      setTimeout(() => {
+        modalInput.current?.focus();
+      }, 10);
+    } else {
+      setTimeout(() => {
+        Keyboard.dismiss();
+      }, 10);
+    }
+  }, [state.isAddModalOpen]);
+
   return (
     <SimpleModal
-      closeFunction={props.closeModal}
-      visible={props.addModalVisible}
+      closeFunction={() => {
+        dispatch({ type: 'CLOSE_ADD_MODAL' });
+      }}
+      visible={state.isAddModalOpen}
     >
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'position' : 'height'}
@@ -42,13 +55,16 @@ export default function AddTaskModal(props: {
           style={styles.saveButtonWrapper}
           disabled={!newTaskText}
           onPress={() => {
-            dispatch(
-              addTask({
-                value: newTaskText,
-                done: false,
-                id: parseInt(Math.random().toFixed(10).substring(2)),
-              })
-            );
+            dispatch({ type: 'CLOSE_ADD_MODAL' });
+            setTimeout(() => {
+              dispatch(
+                addTask({
+                  value: newTaskText,
+                  done: false,
+                  id: parseInt(Math.random().toFixed(10).substring(2)),
+                })
+              );
+            }, 200);
             setNewTaskText('');
           }}
         >

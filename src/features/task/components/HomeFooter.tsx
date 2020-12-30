@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {
   Text,
   StyleSheet,
@@ -8,8 +8,10 @@ import {
 } from 'react-native';
 import MenuBullet from '../../icons/components/MenuBullet';
 import MenuBurger from '../../icons/components/MenuBurger';
+import TaskContext from '../state/task.context';
 
-export default function HomeFooter(props: { addHandler: () => void }) {
+export default function HomeFooter() {
+  const { dispatch } = useContext(TaskContext);
   return (
     <>
       <View style={styles.footer}>
@@ -19,7 +21,7 @@ export default function HomeFooter(props: { addHandler: () => void }) {
       <TouchableHighlight
         underlayColor="#EEF8FC"
         style={styles.addIcon}
-        onPress={props.addHandler}
+        onPress={() => dispatch({ type: 'OPEN_ADD_MODAL' })}
         hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
       >
         <Text style={styles.addIconText}>+</Text>

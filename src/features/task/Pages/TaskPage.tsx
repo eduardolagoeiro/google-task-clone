@@ -16,8 +16,6 @@ import TaskContext from '../state/task.context';
 import { addTask, removeTask, restoreState } from '../state/task.reducer';
 
 export default function TaskPage() {
-  const [addModalVisible, setAddModalVisible] = useState(false);
-  const [undoModalVisible, setUndoModalVisible] = useState(false);
   const { state, dispatch } = useContext(TaskContext);
   useEffect(() => {
     AsyncStorage.getItem('tasks').then((taskStr) => {
@@ -25,40 +23,15 @@ export default function TaskPage() {
     });
   }, []);
 
-  // function createTodo(value: string): void {
-  //   setAddModalVisible(false);
-  //   setTimeout(() => {
-  //     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-  //   }, 200);
-  // }
-  useEffect(() => {
-    if (undoModalVisible) {
-      setUndoModalVisible(true);
-    }
-  }, [undoModalVisible]);
-
   return (
     <SafeAreaView style={styles.wrapper}>
-      <AddTaskModal
-        addModalVisible={addModalVisible}
-        closeModal={() => setAddModalVisible(false)}
-      />
+      <AddTaskModal />
       <ScrollView>
         <Text style={styles.headerText}>Todo List Title</Text>
-        <TaskList
-        // removeTodo={(todo) => {
-        //   setUndoModalVisible(true);
-        //   dispatch(removeTodo(todo));
-        //   LayoutAnimation.configureNext(
-        //     LayoutAnimation.Presets.easeInEaseOut
-        //   );
-        // }}
-        />
+        <TaskList />
       </ScrollView>
-      <HomeFooter addHandler={() => setAddModalVisible(true)} />
-      {undoModalVisible && (
-        <UndoAddToast close={() => setUndoModalVisible(false)} />
-      )}
+      <HomeFooter />
+      {state.isUndoModalOpen && <UndoAddToast />}
     </SafeAreaView>
   );
 }

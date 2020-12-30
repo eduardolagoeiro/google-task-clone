@@ -1,3 +1,0 @@
-interface TaskState {
-  tasks: Task[];
-}

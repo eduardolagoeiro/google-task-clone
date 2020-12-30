@@ -3,7 +3,7 @@ import { HOME_INITIAL_STATE } from './task.reducer';
 
 const TaskContext = createContext<{
   state: TaskState;
-  dispatch: React.Dispatch<any>;
+  dispatch: React.Dispatch<TaskReducerAction>;
 }>({
   state: HOME_INITIAL_STATE,
   dispatch: () => null,
