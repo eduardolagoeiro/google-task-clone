@@ -1,19 +1,18 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import {
   SafeAreaView,
   Text,
   StyleSheet,
   Platform,
   ScrollView,
-  LayoutAnimation,
 } from 'react-native';
 import AddTaskModal from '../components/AddTaskModal';
 import HomeFooter from '../components/HomeFooter';
 import TaskList from '../components/TaskList';
-import UndoAddToast from '../components/UndoAddToast';
+import UndoRemoveToast from '../components/UndoRemoveToast';
 import TaskContext from '../state/task.context';
-import { addTask, removeTask, restoreState } from '../state/task.reducer';
+import { restoreState } from '../state/task.reducer';
 
 export default function TaskPage() {
   const { state, dispatch } = useContext(TaskContext);
@@ -31,7 +30,7 @@ export default function TaskPage() {
         <TaskList />
       </ScrollView>
       <HomeFooter />
-      {state.isUndoModalOpen && <UndoAddToast />}
+      {state.isUndoModalOpen && <UndoRemoveToast />}
     </SafeAreaView>
   );
 }

@@ -11,7 +11,8 @@ type TaskReducerActionType =
   | 'OPEN_UNDO_MODAL'
   | 'CLOSE_UNDO_MODAL'
   | 'ADD_TASK'
-  | 'REMOVE_TASK';
+  | 'REMOVE_TASK'
+  | 'UNDO_REMOVE_TASK';
 
 interface TaskReducerAction {
   type: TaskReducerActionType;

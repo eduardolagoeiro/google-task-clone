@@ -1,8 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LayoutAnimation } from 'react-native';
 
-// taskReducerHandlerMap[TaskReducerActionType.ADD_TASK] = () => {};
-
 const taskReducerHandlerMap: Record<
   TaskReducerActionType,
   TaskReducerHandler
@@ -52,6 +50,19 @@ const taskReducerHandlerMap: Record<
       undoTasks: state.undoTasks || state.tasks,
     };
   },
+  UNDO_REMOVE_TASK: (state) => {
+    if (state.undoHideTimeout) clearTimeout(state.undoHideTimeout);
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    AsyncStorage.setItem('tasks', JSON.stringify(state.undoTasks || []));
+    return {
+      ...state,
+      tasks: state.undoTasks || [],
+      removedTasks: [],
+      undoTasks: null,
+      undoHideTimeout: null,
+      isUndoModalOpen: false,
+    };
+  },
 };
 
 export const HomeReducer = (
@@ -59,7 +70,6 @@ export const HomeReducer = (
   action: TaskReducerAction
 ): TaskState => {
   const taskReducerHandler = taskReducerHandlerMap[action.type];
-  console.log(action.type);
   if (taskReducerHandler) return taskReducerHandler(state, action);
   return state;
 };

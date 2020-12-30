@@ -2,10 +2,10 @@ import React, { useContext, useState } from 'react';
 import { Text, Animated, Pressable } from 'react-native';
 import TaskContext from '../state/task.context';
 
-export default function UndoAddToast() {
+export default function UndoRemoveToast() {
   const [fadeInUndoModal] = useState(new Animated.Value(0));
 
-  const { state } = useContext(TaskContext);
+  const { state, dispatch } = useContext(TaskContext);
   Animated.timing(fadeInUndoModal, {
     duration: 200,
     toValue: 1,
@@ -36,7 +36,10 @@ export default function UndoAddToast() {
       >
         {state.removedTasks.length} task done
       </Text>
-      <Pressable onPress={() => {}}>
+      <Pressable
+        hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+        onPress={() => dispatch({ type: 'UNDO_REMOVE_TASK' })}
+      >
         <Text
           style={{
             color: '#93AFEF',
