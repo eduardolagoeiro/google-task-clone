@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   Platform,
 } from 'react-native';
-import SimpleModal from './SimpleModal';
+import SimpleModal from '../../common/components/SimpleModal';
 
 export default function AddTodoModal(props: {
   closeModal: () => void;

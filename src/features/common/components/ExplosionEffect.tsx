@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import ExplosionParticle from './ExplosionParticle';
+import ExplosionParticle from '../../task/components/ExplosionParticle';
 
 export default function ExplosionEffect(props: {
   explosionTime: number;

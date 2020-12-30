@@ -6,8 +6,8 @@ import {
   TouchableHighlight,
   Dimensions,
 } from 'react-native';
-import MenuBullet from '../icons/MenuBullet';
-import MenuBurger from '../icons/MenuBurger';
+import MenuBullet from '../../icons/components/MenuBullet';
+import MenuBurger from '../../icons/components/MenuBurger';
 
 export default function HomeFooter(props: { addHandler: () => void }) {
   return (

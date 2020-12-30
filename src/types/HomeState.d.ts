@@ -1,3 +1,0 @@
-interface HomeState {
-  todos: Todo[];
-}

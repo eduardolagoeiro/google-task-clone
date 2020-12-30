@@ -1,22 +1,22 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const HomeReducer = (
-  state: HomeState,
-  action: HomeReducerAction
-): HomeState => {
+  state: TaskState,
+  action: TaskReducerAction
+): TaskState => {
   if (action.type === 'RESTORE') {
     return {
       ...state,
       ...action.payload,
     };
-  } else if (action.type === 'ADD_TODO') {
+  } else if (action.type === 'ADD_TASK') {
     const todos = [action.payload, ...state.todos];
     AsyncStorage.setItem('todos', JSON.stringify(todos));
     return {
       ...state,
       todos,
     };
-  } else if (action.type === 'REMOVE_TODO') {
+  } else if (action.type === 'REMOVE_TASK') {
     const todos = state.todos.filter((el) => el.id !== action.payload.id);
     AsyncStorage.setItem('todos', JSON.stringify(todos));
     return {
@@ -28,29 +28,29 @@ export const HomeReducer = (
   }
 };
 
-export function addTodo(todo: Todo): HomeReducerAction {
+export function addTodo(task: Task): TaskReducerAction {
   return {
-    type: 'ADD_TODO',
-    payload: todo,
+    type: 'ADD_TASK',
+    payload: task,
   };
 }
 
-export function removeTodo(todo: Todo): HomeReducerAction {
+export function removeTodo(task: Task): TaskReducerAction {
   return {
-    type: 'REMOVE_TODO',
-    payload: todo,
+    type: 'REMOVE_TASK',
+    payload: task,
   };
 }
 
-export function restoreState(todos: Todo[]): HomeReducerAction {
+export function restoreState(task: Task[]): TaskReducerAction {
   return {
     type: 'RESTORE',
     payload: {
-      todos,
+      todos: task,
     },
   };
 }
 
-export const HOME_INITIAL_STATE: HomeState = {
+export const HOME_INITIAL_STATE: TaskState = {
   todos: [],
 };

@@ -1,4 +1,4 @@
-interface HomeReducerAction {
+interface TaskReducerAction {
   type: string;
   payload: any;
 }

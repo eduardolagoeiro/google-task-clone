@@ -1,18 +1,18 @@
 import React, { memo, useContext, useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableWithoutFeedback } from 'react-native';
-import Check from '../icons/Check';
-import HomeContext from '../state/home.context';
-import { removeTodo } from '../state/home.reducer';
-import ExplosionEffect from './ExplosionEffect';
+import Check from '../../icons/components/Check';
+import TaskContext from '../state/task.context';
+import { removeTodo } from '../state/task.reducer';
+import ExplosionEffect from '../../common/components/ExplosionEffect';
 
 interface TodoItemProps {
-  todo: Todo;
+  todo: Task;
   doneEffectTime: number;
 }
 
 function TodoItem(props: TodoItemProps) {
   const [doneEffect, setDoneEffect] = useState(false);
-  const { dispatch } = useContext(HomeContext);
+  const { dispatch } = useContext(TaskContext);
   useEffect(() => {
     if (doneEffect) {
       setTimeout(() => dispatch(removeTodo(props.todo)), props.doneEffectTime);

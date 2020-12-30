@@ -1,0 +1,3 @@
+interface TaskState {
+  todos: Task[];
+}

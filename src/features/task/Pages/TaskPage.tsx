@@ -10,15 +10,15 @@ import {
 } from 'react-native';
 import AddTodoModal from '../components/AddTodoModal';
 import HomeFooter from '../components/HomeFooter';
-import TodoList from '../components/TodoList';
+import TodoList from '../components/TaskList';
 import UndoAddToast from '../components/UndoAddToast';
-import HomeContext from '../state/home.context';
-import { addTodo, removeTodo, restoreState } from '../state/home.reducer';
+import TaskContext from '../state/task.context';
+import { addTodo, removeTodo, restoreState } from '../state/task.reducer';
 
-export default function Home() {
+export default function TodoPage() {
   const [addModalVisible, setAddModalVisible] = useState(false);
   const [undoModalVisible, setUndoModalVisible] = useState(false);
-  const { state, dispatch } = useContext(HomeContext);
+  const { state, dispatch } = useContext(TaskContext);
   useEffect(() => {
     AsyncStorage.getItem('todos').then((todosStr) => {
       dispatch(restoreState(JSON.parse(todosStr || '[]')));
