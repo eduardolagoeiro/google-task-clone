@@ -70,7 +70,7 @@ const taskReducerHandlerMap: Record<
   },
 };
 
-export const HomeReducer = (
+export const TaskReducer = (
   state: TaskState,
   action: TaskReducerAction
 ): TaskState => {
@@ -108,7 +108,7 @@ export function restoreState(task: Task[]): TaskReducerAction {
   };
 }
 
-export const HOME_INITIAL_STATE: TaskState = {
+export const TASK_INITIAL_STATE: TaskState = {
   tasks: [],
   isAddModalOpen: false,
   isUndoModalOpen: false,

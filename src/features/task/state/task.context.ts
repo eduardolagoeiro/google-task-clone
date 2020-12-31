@@ -1,11 +1,11 @@
 import React, { createContext } from 'react';
-import { HOME_INITIAL_STATE } from './task.reducer';
+import { TASK_INITIAL_STATE } from './task.reducer';
 
 const TaskContext = createContext<{
   state: TaskState;
   dispatch: React.Dispatch<TaskReducerAction>;
 }>({
-  state: HOME_INITIAL_STATE,
+  state: TASK_INITIAL_STATE,
   dispatch: () => null,
 });
 
