@@ -5,17 +5,28 @@ import {
   View,
   TouchableHighlight,
   Dimensions,
+  TouchableOpacity,
 } from 'react-native';
 import MenuBullet from '../../icons/components/MenuBullet';
 import MenuBurger from '../../icons/components/MenuBurger';
+import ThemeContext from '../../theme/state/theme.context';
 import TaskContext from '../state/task.context';
 
 export default function HomeFooter() {
   const { dispatch } = useContext(TaskContext);
+  const { state: themeState, dispatch: themeDispatch } = useContext(
+    ThemeContext
+  );
   return (
     <>
       <View style={styles.footer}>
-        <MenuBurger height={22} width={22} color="#646567" />
+        <TouchableOpacity
+          onPress={() =>
+            themeDispatch({ type: 'SET_THEME_MODE', payload: { mode: 'dark' } })
+          }
+        >
+          <MenuBurger height={22} width={22} color="#646567" />
+        </TouchableOpacity>
         <MenuBullet height={24} width={24} color="#646567" />
       </View>
       <TouchableHighlight

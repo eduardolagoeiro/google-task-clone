@@ -8,6 +8,7 @@ import {
   ScrollView,
   LayoutAnimation,
 } from 'react-native';
+import ThemeContext from '../../theme/state/theme.context';
 import AddTaskModal from '../components/AddTaskModal';
 import EmptyList from '../components/EmptyList';
 import HomeFooter from '../components/HomeFooter';
@@ -33,6 +34,8 @@ export default function TaskPage() {
     }
     setlistIsEmpty(newListIsEmptyValue);
   }, [state.tasks]);
+
+  const { state: themeState } = useContext(ThemeContext);
 
   return (
     <SafeAreaView style={styles.wrapper}>

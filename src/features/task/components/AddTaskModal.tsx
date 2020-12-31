@@ -9,6 +9,7 @@ import {
   Keyboard,
 } from 'react-native';
 import SimpleModal from '../../common/components/SimpleModal';
+import ThemeContext from '../../theme/state/theme.context';
 import TaskContext from '../state/task.context';
 import { addTask } from '../state/task.reducer';
 
@@ -16,6 +17,8 @@ export default function AddTaskModal() {
   const [newTaskText, setNewTaskText] = useState('');
 
   const { state, dispatch } = useContext(TaskContext);
+
+  const { state: themeState } = useContext(ThemeContext);
 
   const modalInput = useRef<TextInput>(null);
 
@@ -71,7 +74,11 @@ export default function AddTaskModal() {
           <Text
             style={[
               styles.saveButton,
-              newTaskText ? {} : styles.saveButtonDisabled,
+              newTaskText
+                ? {}
+                : {
+                    ...styles.saveButtonDisabled,
+                  },
             ]}
           >
             Save
