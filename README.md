@@ -19,11 +19,15 @@ yarn start
 * [x] done todo list
 * [x] empty todo list view
 * [x] toast todo undo
+* [ ] global state
 * [ ] menu click
-* [ ] add new list
+* [ ] add new list (persist multiple lists)
 * [ ] rename list
 * [ ] delete list
 * [ ] todo comment
 * [ ] todo date
 * [ ] todo subtodo
 * [ ] subtodo gesture
+* [ ] deploy google play
+
+* [ ] fix max size task value adjust layout
