@@ -19,6 +19,7 @@ import { restoreState } from '../state/task.reducer';
 
 export default function TaskPage() {
   const { state, dispatch } = useContext(TaskContext);
+  const { state: themeState } = useContext(ThemeContext);
   useEffect(() => {
     AsyncStorage.getItem('tasks').then((taskStr) => {
       dispatch(restoreState(JSON.parse(taskStr || '[]')));
@@ -35,13 +36,24 @@ export default function TaskPage() {
     setlistIsEmpty(newListIsEmptyValue);
   }, [state.tasks]);
 
-  const { state: themeState } = useContext(ThemeContext);
-
   return (
     <SafeAreaView style={styles.wrapper}>
       <AddTaskModal />
-      <ScrollView>
-        <Text style={styles.headerText}>Todo List Title</Text>
+      <ScrollView
+        style={{
+          backgroundColor: themeState.theme.backgroundColor,
+        }}
+      >
+        <Text
+          style={[
+            styles.headerText,
+            {
+              color: themeState.theme.contrast,
+            },
+          ]}
+        >
+          Todo List Title
+        </Text>
         {!listIsEmpty ? (
           state.tasks.map((el) => (
             <TaskItem doneEffectTime={100} key={el.id} task={el} />

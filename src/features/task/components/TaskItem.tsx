@@ -4,6 +4,7 @@ import Check from '../../icons/components/Check';
 import TaskContext from '../state/task.context';
 import { removeTask } from '../state/task.reducer';
 import ExplosionEffect from '../../common/components/ExplosionEffect';
+import ThemeContext from '../../theme/state/theme.context';
 
 interface TaskItemProps {
   task: Task;
@@ -13,6 +14,7 @@ interface TaskItemProps {
 function TaskItem(props: TaskItemProps) {
   const [doneEffect, setDoneEffect] = useState(false);
   const { dispatch } = useContext(TaskContext);
+  const { state: themeState } = useContext(ThemeContext);
 
   useEffect(() => {
     if (doneEffect) {
@@ -52,7 +54,16 @@ function TaskItem(props: TaskItemProps) {
           )}
         </View>
       </TouchableWithoutFeedback>
-      <Text style={styles.text}>{props.task.value}</Text>
+      <View
+        style={{
+          flex: 1,
+          alignItems: 'flex-start',
+        }}
+      >
+        <Text style={[styles.text, { color: themeState.theme.contrast }]}>
+          {props.task.value}
+        </Text>
+      </View>
     </View>
   );
 }
@@ -65,8 +76,8 @@ const styles = StyleSheet.create({
   wrapper: {
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'flex-end',
     marginVertical: 12,
+    alignItems: 'center',
   },
   checkbox: {
     height: 20,
@@ -77,5 +88,6 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 18,
+    marginRight: 24,
   },
 });

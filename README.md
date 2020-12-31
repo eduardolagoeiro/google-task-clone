@@ -16,10 +16,10 @@ yarn start
 * [x] checkbox animation
 * [x] persist todo list
 * [x] todo check remove animation
-* [x] done todo list
+* [ ] done todo list
 * [x] empty todo list view
 * [x] toast todo undo
-* [ ] global state
+* [x] global state
 * [ ] menu click
 * [ ] add new list (persist multiple lists)
 * [ ] rename list
@@ -29,5 +29,3 @@ yarn start
 * [ ] todo subtodo
 * [ ] subtodo gesture
 * [ ] deploy google play
-
-* [ ] fix max size task value adjust layout

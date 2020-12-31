@@ -1,15 +1,21 @@
 const themes: Record<ThemeMode, Theme> = {
   light: {
     backgroundColor: '#FFFFFF',
+    backgroundColorLight: '#FFFFFF',
     contrast: '#000000',
     primary: '#2373E6',
+    primaryLight: '#EEF8FC',
+    primaryAccent: '#93AFEF',
     disabled: '#B7B7B7',
     text: '#000000',
   },
   dark: {
-    backgroundColor: '#000000',
-    contrast: '#FFFFFF',
+    backgroundColor: '#212121',
+    backgroundColorLight: '#303135',
+    contrast: '#EEEEEE',
     primary: '#2373E6',
+    primaryLight: '#082349',
+    primaryAccent: '#0E3E81',
     disabled: '#B7B7B7',
     text: '#FFFFFF',
   },

@@ -1,46 +1,48 @@
 import * as React from 'react';
 import Svg, { Path, Ellipse } from 'react-native-svg';
+import ThemeContext from '../../theme/state/theme.context';
 
 export default function EmptyList(props: {}) {
+  const { state: themeState } = React.useContext(ThemeContext);
   return (
     <Svg width={146} height={189} viewBox="0 0 146 189" fill="none" {...props}>
       <Path
         d="M63.285 110.348h3.993l9.324 76.162h-3.993l-9.324-76.162z"
-        fill="#000"
+        fill={themeState.theme.contrast}
       />
       <Path
         d="M4.559 41.238a3.868 3.868 0 013.82 3.239l3.469 21.189c.387 2.354-1.432 4.486-3.82 4.486a3.868 3.868 0 01-3.822-3.239L.738 45.724c-.388-2.348 1.432-4.486 3.82-4.486z"
-        fill="#000"
+        fill={themeState.theme.contrast}
       />
       <Path
         d="M15.624 110.348h-3.992L2.308 186.51H6.3l9.325-76.162z"
-        fill="#000"
+        fill={themeState.theme.contrast}
       />
       <Path
         d="M2.33 41.238c.826 0 1.528.612 1.663 1.449l10.93 67.661h-3.937L.235 43.783c-.22-1.333.78-2.545 2.095-2.545zM65.746 117.4h-51.88a1.048 1.048 0 01-1.045-1.052v-2.127c0-.581.468-1.052 1.045-1.052h51.88c.577 0 1.044.471 1.044 1.052v2.127c0 .581-.468 1.052-1.044 1.052z"
-        fill="#2373E6"
+        fill={themeState.theme.primaryAccent}
       />
       <Path
         d="M69.95 115.284H8.96a1.05 1.05 0 01-1.045-1.057v-2.822a1.05 1.05 0 011.044-1.057H69.95a1.05 1.05 0 011.045 1.057v2.822a1.05 1.05 0 01-1.045 1.057z"
-        fill="#000"
+        fill={themeState.theme.contrast}
       />
       <Path
         fillRule="evenodd"
         clipRule="evenodd"
         d="M56.977 169.725l-4.225 9.279 6.317 2.645c6.634 2.723 5.728 6.021 4.818 6.396l-4.896-.79-10.521-2.241a3.682 3.682 0 01-2.755-4.68l4.51-14.754 6.752 4.145z"
-        fill="#000"
+        fill={themeState.theme.contrast}
       />
       <Path
         fillRule="evenodd"
         clipRule="evenodd"
         d="M46.71 88.112s44.537-7.58 40.748 12.161c-3.79 19.742-23.533 58.594-27.482 73.282l-11.372-3.474s4.738-16.584 6.16-25.902c1.422-9.318 6.95-30.956 10.74-38.852 0 0-55.751 20.69-48.17-20.847l29.376 3.632z"
-        fill="#2373E6"
+        fill={themeState.theme.primaryAccent}
       />
       <Path
         fillRule="evenodd"
         clipRule="evenodd"
         d="M62.03 76.504s7.107-8.45 7.186-13.345l-7.976-1.816s-.947 10.028.79 15.161z"
-        fill="#000"
+        fill={themeState.theme.contrast}
       />
       <Path
         fillRule="evenodd"
@@ -52,7 +54,7 @@ export default function EmptyList(props: {}) {
         fillRule="evenodd"
         clipRule="evenodd"
         d="M57.924 36.942s2.606-1.066 4.975 6.633c2.369 7.7 6.633 19.544 6.633 19.544s-6.999 5.202-7.502 13.7c0 0-10.266-13.463-12.398-19.03-2.132-5.568-3.198-22.506 8.292-20.847z"
-        fill="#000"
+        fill={themeState.theme.contrast}
       />
       <Path
         fillRule="evenodd"
@@ -64,25 +66,25 @@ export default function EmptyList(props: {}) {
         fillRule="evenodd"
         clipRule="evenodd"
         d="M98.522 24.544c.447.239.668.755.533 1.243-.118.622-8.439 12.822-9.002 13.652-.562.829-.621 1.303-3.139 1.333-2.517.03-3.85 0-4.56 0-.71 0-.888-1.007-.681-1.333.207-.326 16.85-14.895 16.85-14.895z"
-        fill="#000"
+        fill={themeState.theme.contrast}
       />
       <Path
         fillRule="evenodd"
         clipRule="evenodd"
         d="M87.518 40.061h-5.323c-.6 0-.748-.49-.332-1.09l9.303-13.376c.418-.6 1.249-1.09 1.849-1.09h5.322c.6 0 .748.49.333 1.09L89.366 38.97c-.417.6-1.249 1.09-1.848 1.09z"
-        fill="#000"
+        fill={themeState.theme.contrast}
       />
       <Path
         fillRule="evenodd"
         clipRule="evenodd"
         d="M97.774 26.366H90.98l-5.418 7.79 11.487-6.747.725-1.043z"
-        fill="#000"
+        fill={themeState.theme.contrast}
       />
       <Path
         fillRule="evenodd"
         clipRule="evenodd"
         d="M85.562 34.156l-2.819 4.053h6.794l7.511-10.8-11.486 6.747z"
-        fill="#000"
+        fill={themeState.theme.contrast}
       />
       <Ellipse
         cx={85.527}
@@ -90,13 +92,13 @@ export default function EmptyList(props: {}) {
         rx={0.771}
         ry={0.39}
         transform="rotate(-35.412 85.527 39.096)"
-        fill="#000"
+        fill={themeState.theme.contrast}
       />
       <Path
         fillRule="evenodd"
         clipRule="evenodd"
         d="M95.54 25.557h-1.194c-.028 0-.035-.023-.015-.051a.122.122 0 01.086-.05h1.194c.027 0 .034.022.015.05a.124.124 0 01-.086.051zM95.4 25.003c.028-.04.018-.071-.02-.071a.17.17 0 00-.121.07c-.028.04-.017.072.02.072a.17.17 0 00.122-.071z"
-        fill="#000"
+        fill={themeState.theme.contrast}
       />
       <Ellipse
         cx={93.797}
@@ -104,7 +106,7 @@ export default function EmptyList(props: {}) {
         rx={0.184}
         ry={0.093}
         transform="rotate(-35.412 93.797 25.506)"
-        fill="#000"
+        fill={themeState.theme.contrast}
       />
       <Path
         fillRule="evenodd"
@@ -116,25 +118,25 @@ export default function EmptyList(props: {}) {
         fillRule="evenodd"
         clipRule="evenodd"
         d="M90.865 37.51c1.5 1.28 1.785 2.916.002 2.248-1.782-.668-1.42-2.306-.77-2.308.649-.002.768.06.768.06zM93.127 33.803c2.623.54 4.003 2.166 1.427 2.458-2.576.291-3.175-1.709-2.393-2.083.783-.374.966-.375.966-.375z"
-        fill="#000"
+        fill={'#FFBFAE'}
       />
       <Path
         fillRule="evenodd"
         clipRule="evenodd"
         d="M126.467 147.567l6.674 7.707 5.037-4.641c5.24-4.895 7.858-2.698 7.821-1.714l-2.757 4.121-6.423 8.631a3.682 3.682 0 01-5.402.554l-11.533-10.249 6.583-4.409z"
-        fill="#000"
+        fill={themeState.theme.contrast}
       />
       <Path
         fillRule="evenodd"
         clipRule="evenodd"
         d="M22.073 25.412c-5.45.237-2.882 10.937-4.778 26.81-1.895 15.872-.947 37.548-.947 37.548s28.665-.71 33.403-.592c0 0 3.81-33.948 10.748-50.2a.927.927 0 00-.25-1.076c-1.462-1.235-8.404-4.93-15.53-8.898-9.429-5.247-17.197-3.829-22.646-3.592z"
-        fill="#000"
+        fill={themeState.theme.contrast}
       />
       <Path
         fillRule="evenodd"
         clipRule="evenodd"
         d="M23.336 68.528s5.37-18.478 15.399-8.37c0 0-7.817 8.37-15.399 8.37z"
-        fill="#000"
+        fill={themeState.theme.contrast}
       />
       <Path
         fillRule="evenodd"
@@ -146,13 +148,13 @@ export default function EmptyList(props: {}) {
         fillRule="evenodd"
         clipRule="evenodd"
         d="M19.54 25.71c.67-.364 3.266-.53 4.034-.614 2.505-.274 5.084 2.532 6.554 4.58 2.211 3.08 4.343 8.055 8.607 30.482 0 0-12.162 4.028-15.399 8.37 0 0-6.08-16.267-6.317-28.428-.076-3.867-.51-7.828.575-11.604.212-.736.49-1.474.998-2.047.27-.3.591-.55.948-.738z"
-        fill="#000"
+        fill={themeState.theme.contrast}
       />
       <Path
         fillRule="evenodd"
         clipRule="evenodd"
         d="M53.35 9.744s2.116-3.591 1.892-4.906c-.225-1.315-.129-3.046-2.533-4.168-2.405-1.122-5.548-.77-8.37.577-2.822 1.346-8.979.961-8.53 8.24.45 7.28 6.222 7.857 5.676 10.165l4.586-3.943 7.279-5.965z"
-        fill="#000"
+        fill={themeState.mode === 'dark' ? 'yellow' : themeState.theme.contrast}
       />
       <Path
         fillRule="evenodd"
@@ -170,7 +172,7 @@ export default function EmptyList(props: {}) {
         fillRule="evenodd"
         clipRule="evenodd"
         d="M16.86 86.691s-4.263 23.374 5.845 24.48c10.107 1.105 37.904-2.053 41.853 1.895 3.948 3.948 18.793 19.584 33.008 28.428 14.214 8.844 21.953 16.268 21.953 16.268l9.634-7.424s-30.64-37.587-36.799-44.537c-6.16-6.95-12.16-15.162-22.9-15.793-10.74-.632-52.277-1.58-52.593-3.317z"
-        fill="#2373E6"
+        fill={themeState.theme.primaryAccent}
       />
     </Svg>
   );

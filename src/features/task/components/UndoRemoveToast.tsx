@@ -1,10 +1,11 @@
 import React, { useContext, useState } from 'react';
 import { Text, Animated, Pressable } from 'react-native';
+import ThemeContext from '../../theme/state/theme.context';
 import TaskContext from '../state/task.context';
 
 export default function UndoRemoveToast() {
   const [fadeInUndoModal] = useState(new Animated.Value(0));
-
+  const { state: themeState } = useContext(ThemeContext);
   const { state, dispatch } = useContext(TaskContext);
   Animated.timing(fadeInUndoModal, {
     duration: 200,
@@ -18,7 +19,7 @@ export default function UndoRemoveToast() {
         position: 'absolute',
         bottom: 108,
         width: '95%',
-        backgroundColor: 'black',
+        backgroundColor: themeState.theme.contrast,
         borderColor: 'transparent',
         borderWidth: 0,
         height: 50,
@@ -32,7 +33,7 @@ export default function UndoRemoveToast() {
     >
       <Text
         style={{
-          color: 'white',
+          color: themeState.theme.backgroundColor,
         }}
       >
         {state.removedTasks.length} task(s) done
@@ -43,7 +44,7 @@ export default function UndoRemoveToast() {
       >
         <Text
           style={{
-            color: '#93AFEF',
+            color: themeState.theme.primaryAccent,
             fontWeight: 'bold',
           }}
         >

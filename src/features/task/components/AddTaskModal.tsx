@@ -43,19 +43,29 @@ export default function AddTaskModal() {
     >
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'position' : 'height'}
-        contentContainerStyle={styles.addModal}
-        style={styles.addModal}
+        contentContainerStyle={[
+          styles.addModal,
+          { backgroundColor: themeState.theme.backgroundColor },
+        ]}
+        style={[
+          styles.addModal,
+          { backgroundColor: themeState.theme.backgroundColor },
+        ]}
       >
         <TextInput
           autoFocus={true}
+          placeholderTextColor={themeState.theme.disabled}
           placeholder="New task"
           ref={modalInput}
-          style={styles.modalInput}
+          style={[styles.modalInput, { color: themeState.theme.text }]}
           onChangeText={setNewTaskText}
           value={newTaskText}
         />
         <TouchableOpacity
-          style={styles.saveButtonWrapper}
+          style={[
+            styles.saveButtonWrapper,
+            { backgroundColor: themeState.theme.backgroundColor },
+          ]}
           disabled={!newTaskText}
           onPress={() => {
             dispatch({ type: 'CLOSE_ADD_MODAL' });
@@ -75,9 +85,11 @@ export default function AddTaskModal() {
             style={[
               styles.saveButton,
               newTaskText
-                ? {}
+                ? {
+                    color: themeState.theme.primary,
+                  }
                 : {
-                    ...styles.saveButtonDisabled,
+                    color: themeState.theme.disabled,
                   },
             ]}
           >
@@ -93,29 +105,22 @@ const styles = StyleSheet.create({
   addModal: {
     height: 132,
     width: '100%',
-    backgroundColor: 'white',
     borderTopStartRadius: 5,
     borderTopEndRadius: 5,
     position: 'absolute',
     bottom: 0,
   },
   modalInput: {
-    color: 'black',
     fontSize: 16,
     padding: 20,
   },
   saveButtonWrapper: {
-    backgroundColor: 'white',
     paddingRight: 25,
     paddingBottom: 40,
   },
   saveButton: {
-    color: '#2373E6',
     fontSize: 16,
     fontWeight: 'bold',
     alignSelf: 'flex-end',
-  },
-  saveButtonDisabled: {
-    color: '#B7B7B7',
   },
 });
