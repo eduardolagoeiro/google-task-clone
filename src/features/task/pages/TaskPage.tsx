@@ -11,7 +11,7 @@ import {
 import ThemeContext from '../../theme/state/theme.context';
 import AddTaskModal from '../components/AddTaskModal';
 import EmptyList from '../components/EmptyList';
-import HomeFooter from '../components/HomeFooter';
+import TaskFooter from '../components/TaskFooter';
 import TaskItem from '../components/TaskItem';
 import UndoRemoveToast from '../components/UndoRemoveToast';
 import TaskContext from '../state/task.context';
@@ -62,7 +62,7 @@ export default function TaskPage() {
           <EmptyList />
         )}
       </ScrollView>
-      <HomeFooter />
+      <TaskFooter />
       {state.isUndoModalOpen && <UndoRemoveToast />}
     </SafeAreaView>
   );

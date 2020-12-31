@@ -15,7 +15,7 @@ import { NamedColors } from '../../theme/Colors';
 import ThemeContext from '../../theme/state/theme.context';
 import TaskContext from '../state/task.context';
 
-export default function HomeFooter() {
+export default function TaskFooter() {
   const { state, dispatch } = useContext(TaskContext);
   const { state: themeState, dispatch: themeDispatch } = useContext(
     ThemeContext
