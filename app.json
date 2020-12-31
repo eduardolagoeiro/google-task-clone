@@ -27,6 +27,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "description": "Google Task App Clone",
+    "githubUrl": "https://github.com/eduardolagoeiro/google-task-clone",
+    "androidNavigationBar": {
+      "barStyle": "dark-content",
+      "backgroundColor": "#FFFFFF"
     }
   }
 }

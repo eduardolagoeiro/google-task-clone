@@ -14,9 +14,10 @@ export default function UndoRemoveToast() {
   return (
     <Animated.View
       style={{
+        alignSelf: 'center',
         position: 'absolute',
         bottom: 108,
-        width: '100%',
+        width: '95%',
         backgroundColor: 'black',
         borderColor: 'transparent',
         borderWidth: 0,

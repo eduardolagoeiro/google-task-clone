@@ -9,11 +9,15 @@ interface CheckProps {
 
 export default function CheckBox(props: CheckProps) {
   return (
-    <Svg {...props.width} viewBox="0 0 14 11" fill="none" {...props}>
+    <Svg
+      viewBox="0 0 22 16"
+      fill="none"
+      {...props}
+      width={props.width}
+      height={props.height}
+    >
       <Path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M11.14.766a1.172 1.172 0 011.674 1.64l-6.237 7.797a1.171 1.171 0 01-1.688.031L.756 6.1a1.172 1.172 0 111.656-1.656l3.272 3.27L11.111.8a.362.362 0 01.031-.034h-.001z"
+        d="M7.184 11.931L2.158 7.194 0 9.228 7.184 16 22 2.034 19.842 0 7.184 11.931z"
         fill={props.color}
       />
     </Svg>

@@ -4,7 +4,7 @@ import TaskContext from '../state/task.context';
 import TaskItem from './TaskItem';
 
 export default function TaskList() {
-  const addTaskEffectTime = 150;
+  const addTaskEffectTime = 100;
 
   const { state } = useContext(TaskContext);
 

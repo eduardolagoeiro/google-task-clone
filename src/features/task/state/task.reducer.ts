@@ -26,6 +26,7 @@ const taskReducerHandlerMap: Record<
     isUndoModalOpen: false,
     removedTasks: [],
     undoTasks: null,
+    undoHideTimeout: null,
   }),
   ADD_TASK: (state, action) => {
     const tasks = [action.payload, ...state.tasks];

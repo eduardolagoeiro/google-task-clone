@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Animated, StyleSheet, StyleSheetProperties } from 'react-native';
+import React, { useState } from 'react';
+import { Animated, Easing } from 'react-native';
 
 interface ExplosionParticleProps {
   translateXTo?: number;
@@ -21,11 +21,13 @@ export default function ExplosionParticle(props: ExplosionParticleProps) {
         duration: props.explosionTime || 0,
         useNativeDriver: true,
         toValue: props.translateXTo || 0,
+        easing: Easing.quad,
       }),
       Animated.timing(translateY, {
         duration: props.explosionTime || 0,
         useNativeDriver: true,
         toValue: props.translateYTo || 0,
+        easing: Easing.quad,
       }),
     ]),
     Animated.timing(opacity, {
@@ -43,10 +45,10 @@ export default function ExplosionParticle(props: ExplosionParticleProps) {
           opacity,
           borderRadius: 10,
           alignSelf: 'center',
-          width: 3,
-          height: 3,
+          width: 2,
+          height: 2,
           backgroundColor: props.particleColor || 'blue',
-          transform: [{ translateY, translateX }],
+          transform: [{ translateY }, { translateX }],
         },
       ]}
     />

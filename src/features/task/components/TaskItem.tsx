@@ -20,7 +20,7 @@ function TaskItem(props: TaskItemProps) {
         dispatch(
           removeTask(
             props.task,
-            setTimeout(() => dispatch({ type: 'CLOSE_UNDO_MODAL' }), 2000)
+            setTimeout(() => dispatch({ type: 'CLOSE_UNDO_MODAL' }), 4000)
           )
         );
       }, props.doneEffectTime);
