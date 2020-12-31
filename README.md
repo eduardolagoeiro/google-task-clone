@@ -17,7 +17,7 @@ yarn start
 * [x] persist todo list
 * [x] todo check remove animation
 * [x] done todo list
-* [ ] empty todo list view
+* [x] empty todo list view
 * [x] toast todo undo
 * [ ] menu click
 * [ ] add new list

@@ -35,7 +35,7 @@ export default function UndoRemoveToast() {
           color: 'white',
         }}
       >
-        {state.removedTasks.length} task done
+        {state.removedTasks.length} task(s) done
       </Text>
       <Pressable
         hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}

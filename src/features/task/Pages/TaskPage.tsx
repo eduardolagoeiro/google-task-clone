@@ -1,15 +1,17 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   SafeAreaView,
   Text,
   StyleSheet,
   Platform,
   ScrollView,
+  LayoutAnimation,
 } from 'react-native';
 import AddTaskModal from '../components/AddTaskModal';
+import EmptyList from '../components/EmptyList';
 import HomeFooter from '../components/HomeFooter';
-import TaskList from '../components/TaskList';
+import TaskItem from '../components/TaskItem';
 import UndoRemoveToast from '../components/UndoRemoveToast';
 import TaskContext from '../state/task.context';
 import { restoreState } from '../state/task.reducer';
@@ -22,12 +24,28 @@ export default function TaskPage() {
     });
   }, []);
 
+  const [listIsEmpty, setlistIsEmpty] = useState(true);
+
+  useEffect(() => {
+    const newListIsEmptyValue = state.tasks.length === 0;
+    if (!newListIsEmptyValue) {
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    }
+    setlistIsEmpty(newListIsEmptyValue);
+  }, [state.tasks]);
+
   return (
     <SafeAreaView style={styles.wrapper}>
       <AddTaskModal />
       <ScrollView>
         <Text style={styles.headerText}>Todo List Title</Text>
-        <TaskList />
+        {!listIsEmpty ? (
+          state.tasks.map((el) => (
+            <TaskItem doneEffectTime={100} key={el.id} task={el} />
+          ))
+        ) : (
+          <EmptyList />
+        )}
       </ScrollView>
       <HomeFooter />
       {state.isUndoModalOpen && <UndoRemoveToast />}

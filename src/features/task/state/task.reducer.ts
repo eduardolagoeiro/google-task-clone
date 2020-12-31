@@ -32,9 +32,13 @@ const taskReducerHandlerMap: Record<
     const tasks = [action.payload, ...state.tasks];
     AsyncStorage.setItem('tasks', JSON.stringify(tasks));
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    const undoTasks = state.undoTasks
+      ? [action.payload, ...state.undoTasks]
+      : null;
     return {
       ...state,
       tasks,
+      undoTasks,
     };
   },
   REMOVE_TASK: (state, action) => {
