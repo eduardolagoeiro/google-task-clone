@@ -12,7 +12,9 @@ type TaskReducerActionType =
   | 'CLOSE_UNDO_MODAL'
   | 'ADD_TASK'
   | 'REMOVE_TASK'
-  | 'UNDO_REMOVE_TASK';
+  | 'UNDO_REMOVE_TASK'
+  | 'OPEN_BULLET_MENU'
+  | 'CLOSE_BULLET_MENU';
 
 interface TaskReducerAction {
   type: TaskReducerActionType;
@@ -26,6 +28,7 @@ interface TaskState {
   undoHideTimeout: NodeJS.Timeout | null;
   removedTasks: Task[];
   undoTasks: Task[] | null;
+  isBulletMenuOpen: boolean;
 }
 
 type TaskReducerHandler = (

@@ -6,7 +6,9 @@ import {
   TouchableHighlight,
   Dimensions,
   TouchableOpacity,
+  Switch,
 } from 'react-native';
+import SimpleModal from '../../common/components/SimpleModal';
 import MenuBullet from '../../icons/components/MenuBullet';
 import MenuBurger from '../../icons/components/MenuBurger';
 import { NamedColors } from '../../theme/Colors';
@@ -14,12 +16,62 @@ import ThemeContext from '../../theme/state/theme.context';
 import TaskContext from '../state/task.context';
 
 export default function HomeFooter() {
-  const { dispatch } = useContext(TaskContext);
+  const { state, dispatch } = useContext(TaskContext);
   const { state: themeState, dispatch: themeDispatch } = useContext(
     ThemeContext
   );
   return (
     <>
+      <SimpleModal
+        closeFunction={() => {
+          dispatch({ type: 'CLOSE_BULLET_MENU' });
+        }}
+        visible={state.isBulletMenuOpen}
+      >
+        <View
+          style={{
+            backgroundColor: themeState.theme.backgroundColor,
+            paddingTop: 30,
+            paddingBottom: 100,
+            paddingHorizontal: 40,
+            borderTopStartRadius: 5,
+            borderTopEndRadius: 5,
+          }}
+        >
+          <View
+            style={{
+              alignItems: 'center',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            }}
+          >
+            <Text style={{ color: themeState.theme.text, fontSize: 18 }}>
+              Dark mode
+            </Text>
+            <Switch
+              trackColor={{
+                false: NamedColors.Gray500,
+                true: themeState.theme.primaryAccent,
+              }}
+              thumbColor={
+                themeState.mode === 'dark'
+                  ? themeState.theme.primary
+                  : NamedColors.Gray100
+              }
+              ios_backgroundColor={NamedColors.Gray500}
+              onValueChange={() =>
+                themeDispatch({
+                  type: 'SET_THEME_MODE',
+                  payload: {
+                    mode: themeState.mode === 'light' ? 'dark' : 'light',
+                  },
+                })
+              }
+              value={themeState.mode === 'dark'}
+            />
+          </View>
+        </View>
+      </SimpleModal>
       <View
         style={[
           styles.footer,
@@ -39,14 +91,7 @@ export default function HomeFooter() {
               },
         ]}
       >
-        <TouchableOpacity
-          onPress={() =>
-            themeDispatch({
-              type: 'SET_THEME_MODE',
-              payload: { mode: 'light' },
-            })
-          }
-        >
+        <TouchableOpacity onPress={() => {}}>
           <MenuBurger
             height={22}
             width={22}
@@ -58,12 +103,7 @@ export default function HomeFooter() {
           />
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() =>
-            themeDispatch({
-              type: 'SET_THEME_MODE',
-              payload: { mode: 'dark' },
-            })
-          }
+          onPress={() => dispatch({ type: 'OPEN_BULLET_MENU' })}
         >
           <MenuBullet
             height={24}

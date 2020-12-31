@@ -68,6 +68,8 @@ const taskReducerHandlerMap: Record<
       isUndoModalOpen: false,
     };
   },
+  CLOSE_BULLET_MENU: (state) => ({ ...state, isBulletMenuOpen: false }),
+  OPEN_BULLET_MENU: (state) => ({ ...state, isBulletMenuOpen: true }),
 };
 
 export const TaskReducer = (
@@ -115,4 +117,5 @@ export const TASK_INITIAL_STATE: TaskState = {
   undoHideTimeout: null,
   removedTasks: [],
   undoTasks: null,
+  isBulletMenuOpen: false,
 };
