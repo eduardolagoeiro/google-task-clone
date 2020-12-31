@@ -14,7 +14,10 @@ type TaskReducerActionType =
   | 'REMOVE_TASK'
   | 'UNDO_REMOVE_TASK'
   | 'OPEN_BULLET_MENU'
-  | 'CLOSE_BULLET_MENU';
+  | 'CLOSE_BULLET_MENU'
+  | 'OPEN_RENAME_TITLE'
+  | 'CLOSE_RENAME_TITLE'
+  | 'UPDATE_TITLE';
 
 interface TaskReducerAction {
   type: TaskReducerActionType;
@@ -22,6 +25,7 @@ interface TaskReducerAction {
 }
 
 interface TaskState {
+  title: string;
   tasks: Task[];
   isAddModalOpen: boolean;
   isUndoModalOpen: boolean;
@@ -29,6 +33,7 @@ interface TaskState {
   removedTasks: Task[];
   undoTasks: Task[] | null;
   isBulletMenuOpen: boolean;
+  isRenameModalOpen: boolean;
 }
 
 type TaskReducerHandler = (

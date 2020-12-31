@@ -70,6 +70,9 @@ const taskReducerHandlerMap: Record<
   },
   CLOSE_BULLET_MENU: (state) => ({ ...state, isBulletMenuOpen: false }),
   OPEN_BULLET_MENU: (state) => ({ ...state, isBulletMenuOpen: true }),
+  UPDATE_TITLE: (state, action) => ({ ...state, title: action.payload }),
+  OPEN_RENAME_TITLE: (state) => ({ ...state, isRenameModalOpen: true }),
+  CLOSE_RENAME_TITLE: (state) => ({ ...state, isRenameModalOpen: false }),
 };
 
 export const TaskReducer = (
@@ -110,12 +113,21 @@ export function restoreState(task: Task[]): TaskReducerAction {
   };
 }
 
+export function updateTilte(newTitle: string): TaskReducerAction {
+  return {
+    type: 'UPDATE_TITLE',
+    payload: newTitle,
+  };
+}
+
 export const TASK_INITIAL_STATE: TaskState = {
   tasks: [],
+  title: 'Todo List Title',
   isAddModalOpen: false,
   isUndoModalOpen: false,
   undoHideTimeout: null,
   removedTasks: [],
   undoTasks: null,
   isBulletMenuOpen: false,
+  isRenameModalOpen: false,
 };

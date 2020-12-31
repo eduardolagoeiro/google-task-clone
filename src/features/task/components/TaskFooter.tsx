@@ -70,6 +70,22 @@ export default function TaskFooter() {
               value={themeState.mode === 'dark'}
             />
           </View>
+          <TouchableOpacity
+            onPress={() => {
+              dispatch({ type: 'CLOSE_BULLET_MENU' });
+              dispatch({ type: 'OPEN_RENAME_TITLE' });
+            }}
+          >
+            <Text
+              style={{
+                color: themeState.theme.text,
+                fontSize: 18,
+                marginTop: 14,
+              }}
+            >
+              Rename title
+            </Text>
+          </TouchableOpacity>
         </View>
       </SimpleModal>
       <View

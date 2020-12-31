@@ -2,7 +2,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useContext, useEffect, useState } from 'react';
 import {
   SafeAreaView,
-  Text,
   StyleSheet,
   Platform,
   ScrollView,
@@ -11,8 +10,10 @@ import {
 import ThemeContext from '../../theme/state/theme.context';
 import AddTaskModal from '../components/AddTaskModal';
 import EmptyList from '../components/EmptyList';
+import RenameTitleModal from '../components/RenameTitleModal';
 import TaskFooter from '../components/TaskFooter';
 import TaskItem from '../components/TaskItem';
+import TaskTitle from '../components/TaskTitle';
 import UndoRemoveToast from '../components/UndoRemoveToast';
 import TaskContext from '../state/task.context';
 import { restoreState } from '../state/task.reducer';
@@ -39,21 +40,13 @@ export default function TaskPage() {
   return (
     <SafeAreaView style={styles.wrapper}>
       <AddTaskModal />
+      <RenameTitleModal />
       <ScrollView
         style={{
           backgroundColor: themeState.theme.backgroundColor,
         }}
       >
-        <Text
-          style={[
-            styles.headerText,
-            {
-              color: themeState.theme.contrast,
-            },
-          ]}
-        >
-          Todo List Title
-        </Text>
+        <TaskTitle />
         {!listIsEmpty ? (
           state.tasks.map((el) => (
             <TaskItem doneEffectTime={100} key={el.id} task={el} />
@@ -73,11 +66,5 @@ const styles = StyleSheet.create({
     display: 'flex',
     flex: 1,
     paddingTop: Platform.OS === 'android' ? 25 : 0,
-  },
-  headerText: {
-    paddingLeft: 64,
-    paddingTop: 14,
-    paddingBottom: 20,
-    fontSize: 32,
   },
 });

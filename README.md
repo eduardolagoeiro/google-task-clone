@@ -20,9 +20,9 @@ yarn start
 * [x] empty todo list view
 * [x] toast todo undo
 * [x] global state
-* [ ] menu click
+* [x] menu click
 * [ ] add new list (persist multiple lists)
-* [ ] rename list
+* [x] rename list
 * [ ] delete list
 * [ ] todo comment
 * [ ] todo date
