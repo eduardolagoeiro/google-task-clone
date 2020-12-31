@@ -1,5 +1,7 @@
 {
   "expo": {
+    "owner": "more-than-zero",
+    "privacy": "public",
     "name": "GoogleTaskClone",
     "slug": "GoogleTaskClone",
     "version": "1.0.0",
