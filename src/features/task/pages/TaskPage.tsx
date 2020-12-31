@@ -16,14 +16,24 @@ import TaskItem from '../components/TaskItem';
 import TaskTitle from '../components/TaskTitle';
 import UndoRemoveToast from '../components/UndoRemoveToast';
 import TaskContext from '../state/task.context';
-import { restoreState } from '../state/task.reducer';
+import {
+  restoreState,
+  TASK_INITIAL_STATE,
+  updateTilte,
+} from '../state/task.reducer';
 
 export default function TaskPage() {
   const { state, dispatch } = useContext(TaskContext);
   const { state: themeState } = useContext(ThemeContext);
   useEffect(() => {
-    AsyncStorage.getItem('tasks').then((taskStr) => {
-      dispatch(restoreState(JSON.parse(taskStr || '[]')));
+    AsyncStorage.getItem('last_task_state').then(async (lastTaskState) => {
+      try {
+        if (lastTaskState) {
+          dispatch(restoreState(JSON.parse(lastTaskState)));
+        }
+      } catch (error) {
+        console.error(error);
+      }
     });
   }, []);
 

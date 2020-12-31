@@ -30,7 +30,6 @@ const taskReducerHandlerMap: Record<
   }),
   ADD_TASK: (state, action) => {
     const tasks = [action.payload, ...state.tasks];
-    AsyncStorage.setItem('tasks', JSON.stringify(tasks));
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     const undoTasks = state.undoTasks
       ? [action.payload, ...state.undoTasks]
@@ -43,7 +42,6 @@ const taskReducerHandlerMap: Record<
   },
   REMOVE_TASK: (state, action) => {
     const tasks = state.tasks.filter((el) => el.id !== action.payload.task.id);
-    AsyncStorage.setItem('tasks', JSON.stringify(tasks));
     if (state.undoHideTimeout) clearTimeout(state.undoHideTimeout);
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     return {
@@ -58,7 +56,6 @@ const taskReducerHandlerMap: Record<
   UNDO_REMOVE_TASK: (state) => {
     if (state.undoHideTimeout) clearTimeout(state.undoHideTimeout);
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-    AsyncStorage.setItem('tasks', JSON.stringify(state.undoTasks || []));
     return {
       ...state,
       tasks: state.undoTasks || [],
@@ -72,7 +69,9 @@ const taskReducerHandlerMap: Record<
   OPEN_BULLET_MENU: (state) => ({ ...state, isBulletMenuOpen: true }),
   UPDATE_TITLE: (state, action) => ({ ...state, title: action.payload }),
   OPEN_RENAME_TITLE: (state) => ({ ...state, isRenameModalOpen: true }),
-  CLOSE_RENAME_TITLE: (state) => ({ ...state, isRenameModalOpen: false }),
+  CLOSE_RENAME_TITLE: (state) => {
+    return { ...state, isRenameModalOpen: false };
+  },
 };
 
 export const TaskReducer = (
@@ -80,7 +79,13 @@ export const TaskReducer = (
   action: TaskReducerAction
 ): TaskState => {
   const taskReducerHandler = taskReducerHandlerMap[action.type];
-  if (taskReducerHandler) return taskReducerHandler(state, action);
+  if (taskReducerHandler) {
+    const newState = taskReducerHandler(state, action);
+    AsyncStorage.setItem('last_task_state', JSON.stringify(newState)).catch(
+      console.error
+    );
+    return newState;
+  }
   return state;
 };
 
@@ -104,12 +109,10 @@ export function removeTask(
   };
 }
 
-export function restoreState(task: Task[]): TaskReducerAction {
+export function restoreState(lastState: TaskState): TaskReducerAction {
   return {
     type: 'RESTORE',
-    payload: {
-      tasks: task,
-    },
+    payload: lastState,
   };
 }
 
@@ -122,7 +125,7 @@ export function updateTilte(newTitle: string): TaskReducerAction {
 
 export const TASK_INITIAL_STATE: TaskState = {
   tasks: [],
-  title: 'Todo List Title',
+  title: '',
   isAddModalOpen: false,
   isUndoModalOpen: false,
   undoHideTimeout: null,
