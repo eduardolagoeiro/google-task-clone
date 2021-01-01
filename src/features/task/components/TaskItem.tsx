@@ -1,5 +1,11 @@
 import React, { memo, useContext, useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableWithoutFeedback } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  TouchableHighlight,
+} from 'react-native';
 import Check from '../../icons/components/Check';
 import TaskContext from '../state/task.context';
 import { removeTask } from '../state/task.reducer';
@@ -30,59 +36,61 @@ function TaskItem(props: TaskItemProps) {
     }
   }, [doneEffect]);
   return (
-    <View style={styles.wrapper}>
-      {!props.task.done ? (
-        <TouchableWithoutFeedback
-          onPress={() => {
-            setDoneEffect(true);
-          }}
-          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-        >
+    <TouchableHighlight underlayColor={NamedColors.Gray050} onPress={() => {}}>
+      <View style={styles.wrapper}>
+        {!props.task.done ? (
+          <TouchableWithoutFeedback
+            onPress={() => {
+              setDoneEffect(true);
+            }}
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          >
+            <View style={{ marginRight: 18 }}>
+              {doneEffect ? (
+                <ExplosionEffect
+                  explosionRadius={10}
+                  explosionTime={props.doneEffectTime}
+                  innerRadius={15}
+                >
+                  <Check width={20} height={20} color="#2373E6"></Check>
+                </ExplosionEffect>
+              ) : (
+                <View
+                  style={[
+                    styles.checkbox,
+                    {
+                      borderColor: NamedColors.Gray500,
+                    },
+                  ]}
+                />
+              )}
+            </View>
+          </TouchableWithoutFeedback>
+        ) : (
           <View style={{ marginRight: 18 }}>
-            {doneEffect ? (
-              <ExplosionEffect
-                explosionRadius={10}
-                explosionTime={props.doneEffectTime}
-                innerRadius={15}
-              >
-                <Check width={20} height={20} color="#2373E6"></Check>
-              </ExplosionEffect>
-            ) : (
-              <View
-                style={[
-                  styles.checkbox,
-                  {
-                    borderColor: NamedColors.Gray500,
-                  },
-                ]}
-              />
-            )}
+            <Check width={20} height={20} color="#2373E6"></Check>
           </View>
-        </TouchableWithoutFeedback>
-      ) : (
-        <View style={{ marginRight: 18 }}>
-          <Check width={20} height={20} color="#2373E6"></Check>
-        </View>
-      )}
-      <View
-        style={{
-          flex: 1,
-          alignItems: 'flex-start',
-        }}
-      >
-        <Text
-          style={[
-            styles.text,
-            {
-              color: themeState.theme.contrast,
-              textDecorationLine: props.task.done ? 'line-through' : 'none',
-            },
-          ]}
+        )}
+        <View
+          style={{
+            flex: 1,
+            alignItems: 'flex-start',
+          }}
         >
-          {props.task.value}
-        </Text>
+          <Text
+            style={[
+              styles.text,
+              {
+                color: themeState.theme.contrast,
+                textDecorationLine: props.task.done ? 'line-through' : 'none',
+              },
+            ]}
+          >
+            {props.task.value}
+          </Text>
+        </View>
       </View>
-    </View>
+    </TouchableHighlight>
   );
 }
 
@@ -96,6 +104,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginVertical: 12,
     alignItems: 'center',
+    paddingLeft: 24,
   },
   checkbox: {
     height: 20,

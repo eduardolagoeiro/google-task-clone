@@ -15,7 +15,7 @@ export default function TaskTitle() {
       >
         <Text
           style={{
-            paddingLeft: 40,
+            paddingLeft: 64,
             paddingTop: 14,
             paddingBottom: 20,
             fontSize: 32,

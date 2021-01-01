@@ -1,16 +1,18 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import {
   SafeAreaView,
   StyleSheet,
   Platform,
   ScrollView,
   LayoutAnimation,
-  Text,
   View,
+  LayoutRectangle,
+  Dimensions,
 } from 'react-native';
 import ThemeContext from '../../theme/state/theme.context';
 import AddTaskModal from '../components/AddTaskModal';
+import DoneTaskView from '../components/DoneTaskView';
 import EmptyList from '../components/EmptyList';
 import RenameTitleModal from '../components/RenameTitleModal';
 import TaskFooter from '../components/TaskFooter';
@@ -37,6 +39,11 @@ export default function TaskPage() {
 
   const [listIsEmpty, setlistIsEmpty] = useState(true);
 
+  const [completeLayout, setCompleteLayout] = useState<LayoutRectangle | null>(
+    null
+  );
+  const scrollView = useRef<ScrollView>(null);
+
   useEffect(() => {
     const newListIsEmptyValue = state.tasks.length === 0;
     if (!newListIsEmptyValue) {
@@ -50,49 +57,37 @@ export default function TaskPage() {
       <AddTaskModal />
       <RenameTitleModal />
       <ScrollView
+        ref={scrollView}
         style={{
           backgroundColor: themeState.theme.backgroundColor,
         }}
       >
-        <View
-          style={{
-            paddingHorizontal: 24,
-          }}
-        >
-          <TaskTitle />
-          {listIsEmpty && state.doneTasks.length === 0 ? (
-            <EmptyList />
-          ) : (
-            state.tasks.map((el) => (
-              <TaskItem doneEffectTime={100} key={el.id} task={el} />
-            ))
-          )}
-        </View>
+        <TaskTitle />
+        {listIsEmpty && state.doneTasks.length === 0 ? (
+          <EmptyList />
+        ) : (
+          state.tasks.map((el) => (
+            <TaskItem doneEffectTime={100} key={el.id} task={el} />
+          ))
+        )}
         <View
           style={{
             borderBottomColor: themeState.theme.disabled,
             borderBottomWidth: 1,
-            marginTop: 8,
-            marginBottom: 16,
           }}
         />
-        <View
-          style={{
-            paddingHorizontal: 24,
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 18,
-              color: themeState.theme.contrast,
-              marginBottom: 12,
-            }}
-          >
-            Completed ({state.doneTasks.length})
-          </Text>
-          {state.doneTasks.map((el) => (
-            <TaskItem doneEffectTime={100} key={'done-' + el.id} task={el} />
-          ))}
+        <View onLayout={(event) => setCompleteLayout(event.nativeEvent.layout)}>
+          <DoneTaskView
+            onOpen={() =>
+              completeLayout &&
+              Dimensions.get('window').height / 2 < completeLayout.y &&
+              scrollView.current?.scrollTo({
+                x: 0,
+                y: completeLayout.y - Dimensions.get('window').height / 2,
+                animated: true,
+              })
+            }
+          />
         </View>
       </ScrollView>
       <TaskFooter />
