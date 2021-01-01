@@ -6,7 +6,6 @@ import {
   TouchableHighlight,
   Dimensions,
   TouchableOpacity,
-  Switch,
 } from 'react-native';
 import SimpleModal from '../../common/components/SimpleModal';
 import MenuBullet from '../../icons/components/MenuBullet';
@@ -14,21 +13,11 @@ import MenuBurger from '../../icons/components/MenuBurger';
 import { NamedColors } from '../../theme/Colors';
 import ThemeContext from '../../theme/state/theme.context';
 import TaskContext from '../state/task.context';
-import BulletMenuItem from './BulletMenuItem';
+import BulletMenuView from './BulletMenuView';
 
 export default function TaskFooter() {
   const { state, dispatch } = useContext(TaskContext);
-  const { state: themeState, dispatch: themeDispatch } = useContext(
-    ThemeContext
-  );
-  function changeThemMode() {
-    themeDispatch({
-      type: 'SET_THEME_MODE',
-      payload: {
-        mode: themeState.mode === 'light' ? 'dark' : 'light',
-      },
-    });
-  }
+  const { state: themeState } = useContext(ThemeContext);
   return (
     <>
       <SimpleModal
@@ -37,57 +26,7 @@ export default function TaskFooter() {
         }}
         visible={state.isBulletMenuOpen}
       >
-        <View
-          style={{
-            backgroundColor: themeState.theme.backgroundColor,
-            paddingBottom: 100,
-            borderTopStartRadius: 5,
-            borderTopEndRadius: 5,
-          }}
-        >
-          <BulletMenuItem onPress={changeThemMode}>
-            <View
-              style={{
-                alignItems: 'center',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-              }}
-            >
-              <Text style={{ color: themeState.theme.text, fontSize: 18 }}>
-                Dark mode
-              </Text>
-              <Switch
-                trackColor={{
-                  false: NamedColors.Gray500,
-                  true: themeState.theme.primaryAccent,
-                }}
-                thumbColor={
-                  themeState.mode === 'dark'
-                    ? themeState.theme.primary
-                    : NamedColors.Gray100
-                }
-                ios_backgroundColor={NamedColors.Gray500}
-                onValueChange={changeThemMode}
-                value={themeState.mode === 'dark'}
-              />
-            </View>
-          </BulletMenuItem>
-          <BulletMenuItem
-            onPress={() => {
-              dispatch({ type: 'CLOSE_BULLET_MENU' });
-              dispatch({ type: 'OPEN_RENAME_TITLE' });
-            }}
-          >
-            <Text
-              style={{
-                color: themeState.theme.text,
-                fontSize: 18,
-              }}
-            >
-              Rename title
-            </Text>
-          </BulletMenuItem>
-        </View>
+        <BulletMenuView />
       </SimpleModal>
       <View
         style={[
