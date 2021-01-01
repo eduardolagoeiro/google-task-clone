@@ -7,6 +7,7 @@ interface Theme {
   primaryAccent: string;
   disabled: string;
   text: string;
+  highlightGrayUnderlay: string;
 }
 
 type ThemeReducerActionType = 'SET_THEME_MODE';

@@ -1,3 +1,5 @@
+import { NamedColors } from '../Colors';
+
 const themes: Record<ThemeMode, Theme> = {
   light: {
     backgroundColor: '#FFFFFF',
@@ -8,6 +10,7 @@ const themes: Record<ThemeMode, Theme> = {
     primaryAccent: '#93AFEF',
     disabled: '#B7B7B7',
     text: '#000000',
+    highlightGrayUnderlay: NamedColors.Gray050,
   },
   dark: {
     backgroundColor: '#212121',
@@ -18,6 +21,7 @@ const themes: Record<ThemeMode, Theme> = {
     primaryAccent: '#0E3E81',
     disabled: '#B7B7B7',
     text: '#FFFFFF',
+    highlightGrayUnderlay: NamedColors.Gray500,
   },
 };
 

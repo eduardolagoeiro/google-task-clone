@@ -33,7 +33,7 @@ export default function DoneTaskView(props: { onOpen: () => void }) {
   return (
     <>
       <TouchableHighlight
-        underlayColor={NamedColors.Gray050}
+        underlayColor={themeState.theme.highlightGrayUnderlay}
         onPress={() => {
           LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
           setListIsOpen(!listIsOpen);

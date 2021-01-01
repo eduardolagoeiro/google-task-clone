@@ -36,7 +36,10 @@ function TaskItem(props: TaskItemProps) {
     }
   }, [doneEffect]);
   return (
-    <TouchableHighlight underlayColor={NamedColors.Gray050} onPress={() => {}}>
+    <TouchableHighlight
+      underlayColor={themeState.theme.highlightGrayUnderlay}
+      onPress={() => {}}
+    >
       <View style={styles.wrapper}>
         {!props.task.done ? (
           <TouchableWithoutFeedback
