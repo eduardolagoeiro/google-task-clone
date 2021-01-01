@@ -70,25 +70,31 @@ export default function TaskPage() {
             <TaskItem doneEffectTime={100} key={el.id} task={el} />
           ))
         )}
-        <View
-          style={{
-            borderBottomColor: themeState.theme.disabled,
-            borderBottomWidth: 1,
-          }}
-        />
-        <View onLayout={(event) => setCompleteLayout(event.nativeEvent.layout)}>
-          <DoneTaskView
-            onOpen={() =>
-              completeLayout &&
-              Dimensions.get('window').height / 2 < completeLayout.y &&
-              scrollView.current?.scrollTo({
-                x: 0,
-                y: completeLayout.y - Dimensions.get('window').height / 2,
-                animated: true,
-              })
-            }
-          />
-        </View>
+        {state.doneTasks.length > 0 && (
+          <>
+            <View
+              style={{
+                borderBottomColor: themeState.theme.disabled,
+                borderBottomWidth: 1,
+              }}
+            />
+            <View
+              onLayout={(event) => setCompleteLayout(event.nativeEvent.layout)}
+            >
+              <DoneTaskView
+                onOpen={() =>
+                  completeLayout &&
+                  Dimensions.get('window').height / 2 < completeLayout.y &&
+                  scrollView.current?.scrollTo({
+                    x: 0,
+                    y: completeLayout.y - Dimensions.get('window').height / 2,
+                    animated: true,
+                  })
+                }
+              />
+            </View>
+          </>
+        )}
       </ScrollView>
       <TaskFooter />
       {state.isUndoModalOpen && <UndoRemoveToast />}

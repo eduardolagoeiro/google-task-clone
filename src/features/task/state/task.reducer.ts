@@ -84,6 +84,13 @@ const taskReducerHandlerMap: Record<
   CLOSE_RENAME_TITLE: (state) => {
     return { ...state, isRenameModalOpen: false };
   },
+  REMOVE_DONE_TASK: (state) => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    return {
+      ...state,
+      doneTasks: [],
+    };
+  },
 };
 
 export const TaskReducer = (

@@ -1,12 +1,12 @@
 import React, { useContext } from 'react';
-import { View, Text, Switch } from 'react-native';
+import { View, Text, Switch, StyleSheet } from 'react-native';
 import { NamedColors } from '../../theme/Colors';
 import ThemeContext from '../../theme/state/theme.context';
 import TaskContext from '../state/task.context';
 import BulletMenuItem from './BulletMenuItem';
 
 export default function BulletMenuView() {
-  const { dispatch } = useContext(TaskContext);
+  const { state, dispatch } = useContext(TaskContext);
   const { state: themeState, dispatch: themeDispatch } = useContext(
     ThemeContext
   );
@@ -22,12 +22,11 @@ export default function BulletMenuView() {
     <View
       style={{
         backgroundColor: themeState.theme.backgroundColor,
-        paddingBottom: 100,
         borderTopStartRadius: 5,
         borderTopEndRadius: 5,
       }}
     >
-      <BulletMenuItem onPress={changeThemMode}>
+      <BulletMenuItem onPress={changeThemMode} paddingTop={20}>
         <View
           style={{
             alignItems: 'center',
@@ -35,7 +34,7 @@ export default function BulletMenuView() {
             justifyContent: 'space-between',
           }}
         >
-          <Text style={{ color: themeState.theme.text, fontSize: 18 }}>
+          <Text style={[styles.menuItemText, { color: themeState.theme.text }]}>
             Dark mode
           </Text>
           <Switch
@@ -60,15 +59,40 @@ export default function BulletMenuView() {
           dispatch({ type: 'OPEN_RENAME_TITLE' });
         }}
       >
-        <Text
-          style={{
-            color: themeState.theme.text,
-            fontSize: 18,
-          }}
-        >
+        <Text style={[styles.menuItemText, { color: themeState.theme.text }]}>
           Rename title
+        </Text>
+      </BulletMenuItem>
+      <BulletMenuItem
+        disabled={state.doneTasks.length === 0}
+        onPress={() => {
+          dispatch({ type: 'CLOSE_BULLET_MENU' });
+          dispatch({
+            type: 'REMOVE_DONE_TASK',
+          });
+        }}
+      >
+        <Text
+          style={[
+            styles.menuItemText,
+            {
+              paddingBottom: 20,
+              color:
+                state.doneTasks.length === 0
+                  ? themeState.theme.disabled
+                  : themeState.theme.text,
+            },
+          ]}
+        >
+          Remove done tasks
         </Text>
       </BulletMenuItem>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  menuItemText: {
+    fontSize: 18,
+  },
+});

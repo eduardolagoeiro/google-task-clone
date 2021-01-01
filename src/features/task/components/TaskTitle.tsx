@@ -17,6 +17,7 @@ export default function TaskTitle() {
           style={{
             paddingLeft: 64,
             paddingTop: 14,
+            paddingRight: 24,
             paddingBottom: 20,
             fontSize: 32,
             color: themeState.theme.contrast,

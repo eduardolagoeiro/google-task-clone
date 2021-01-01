@@ -16,16 +16,21 @@ yarn start
 * [x] checkbox animation
 * [x] persist todo list
 * [x] todo check remove animation
-* [ ] done todo list
+* [x] done todo list
 * [x] empty todo list view
 * [x] toast todo undo
 * [x] global state
 * [x] menu click
+* [ ] undo task
 * [ ] add new list (persist multiple lists)
 * [x] rename list
 * [ ] delete list
 * [ ] todo comment
 * [ ] todo date
 * [ ] todo subtodo
-* [ ] subtodo gesture
+* [ ] pan gesture to reoder
+* [ ] slide gesture to remove
+* [ ] bullet menu task order
+* [ ] burger menu account (firebase?)
+* [ ] sync with remote db
 * [ ] deploy google play

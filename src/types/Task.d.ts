@@ -19,7 +19,8 @@ type TaskReducerActionType =
   | 'CLOSE_BULLET_MENU'
   | 'OPEN_RENAME_TITLE'
   | 'CLOSE_RENAME_TITLE'
-  | 'UPDATE_TITLE';
+  | 'UPDATE_TITLE'
+  | 'REMOVE_DONE_TASK';
 
 interface TaskReducerAction {
   type: TaskReducerActionType;
