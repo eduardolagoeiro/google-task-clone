@@ -21,7 +21,7 @@ yarn start
 * [x] toast todo undo
 * [x] global state
 * [x] menu click
-* [ ] undo task
+* [x] undo task
 * [ ] add new list (persist multiple lists)
 * [x] rename list
 * [ ] delete list

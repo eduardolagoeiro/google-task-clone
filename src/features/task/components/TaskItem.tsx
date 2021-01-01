@@ -70,9 +70,19 @@ function TaskItem(props: TaskItemProps) {
             </View>
           </TouchableWithoutFeedback>
         ) : (
-          <View style={{ marginRight: 18 }}>
-            <Check width={20} height={20} color="#2373E6"></Check>
-          </View>
+          <TouchableWithoutFeedback
+            onPress={() => {
+              dispatch({
+                type: 'UNDO_DONE_TASK',
+                payload: { task: props.task },
+              });
+            }}
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          >
+            <View style={{ marginRight: 18 }}>
+              <Check width={20} height={20} color="#2373E6"></Check>
+            </View>
+          </TouchableWithoutFeedback>
         )}
         <View
           style={{

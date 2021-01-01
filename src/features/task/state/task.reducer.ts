@@ -63,7 +63,18 @@ const taskReducerHandlerMap: Record<
       undoDoneTasks,
     };
   },
-  UNDO_DONE_TASK: (state) => {
+  UNDO_DONE_TASK: (state, action) => {
+    if (action.payload?.task?.id) {
+      const doneTasks = state.doneTasks.filter(
+        (el) => el.id !== action.payload.task.id
+      );
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+      return {
+        ...state,
+        doneTasks,
+        tasks: [{ ...action.payload.task, done: false }, ...state.tasks],
+      };
+    }
     if (state.undoHideTimeout) clearTimeout(state.undoHideTimeout);
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     return {
