@@ -24,15 +24,16 @@ const taskReducerHandlerMap: Record<
   CLOSE_UNDO_MODAL: (state) => ({
     ...state,
     isUndoModalOpen: false,
-    removedTasks: [],
+    toDoneTasks: [],
     undoTasks: null,
+    undoDoneTasks: null,
     undoHideTimeout: null,
   }),
   ADD_TASK: (state, action) => {
-    const tasks = [action.payload, ...state.tasks];
+    const tasks = [action.payload.task, ...state.tasks];
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     const undoTasks = state.undoTasks
-      ? [action.payload, ...state.undoTasks]
+      ? [action.payload.task, ...state.undoTasks]
       : null;
     return {
       ...state,
@@ -40,27 +41,38 @@ const taskReducerHandlerMap: Record<
       undoTasks,
     };
   },
-  REMOVE_TASK: (state, action) => {
+  DONE_TASK: (state, action) => {
     const tasks = state.tasks.filter((el) => el.id !== action.payload.task.id);
     if (state.undoHideTimeout) clearTimeout(state.undoHideTimeout);
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    const doneTasks = [
+      { ...action.payload.task, doneAt: new Date(), done: true },
+      ...state.doneTasks,
+    ];
+    const undoDoneTasks = state.undoDoneTasks
+      ? state.undoDoneTasks
+      : [...state.doneTasks];
     return {
       ...state,
       tasks,
+      doneTasks,
       isUndoModalOpen: true,
       undoHideTimeout: action.payload.undoHideTimeout,
-      removedTasks: [...state.removedTasks, action.payload.task],
+      toDoneTasks: [...state.toDoneTasks, action.payload.task],
       undoTasks: state.undoTasks || state.tasks,
+      undoDoneTasks,
     };
   },
-  UNDO_REMOVE_TASK: (state) => {
+  UNDO_DONE_TASK: (state) => {
     if (state.undoHideTimeout) clearTimeout(state.undoHideTimeout);
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     return {
       ...state,
       tasks: state.undoTasks || [],
-      removedTasks: [],
+      doneTasks: state.undoDoneTasks || [],
+      toDoneTasks: [],
       undoTasks: null,
+      undoDoneTasks: null,
       undoHideTimeout: null,
       isUndoModalOpen: false,
     };
@@ -92,7 +104,9 @@ export const TaskReducer = (
 export function addTask(task: Task): TaskReducerAction {
   return {
     type: 'ADD_TASK',
-    payload: task,
+    payload: {
+      task,
+    },
   };
 }
 
@@ -101,7 +115,7 @@ export function removeTask(
   undoHideTimeout: NodeJS.Timeout
 ): TaskReducerAction {
   return {
-    type: 'REMOVE_TASK',
+    type: 'DONE_TASK',
     payload: {
       task,
       undoHideTimeout,
@@ -125,12 +139,14 @@ export function updateTilte(newTitle: string): TaskReducerAction {
 
 export const TASK_INITIAL_STATE: TaskState = {
   tasks: [],
+  undoTasks: null,
+  doneTasks: [],
+  undoDoneTasks: null,
+  toDoneTasks: [],
   title: '',
   isAddModalOpen: false,
   isUndoModalOpen: false,
   undoHideTimeout: null,
-  removedTasks: [],
-  undoTasks: null,
   isBulletMenuOpen: false,
   isRenameModalOpen: false,
 };

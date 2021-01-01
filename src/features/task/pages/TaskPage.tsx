@@ -6,6 +6,8 @@ import {
   Platform,
   ScrollView,
   LayoutAnimation,
+  Text,
+  View,
 } from 'react-native';
 import ThemeContext from '../../theme/state/theme.context';
 import AddTaskModal from '../components/AddTaskModal';
@@ -16,11 +18,7 @@ import TaskItem from '../components/TaskItem';
 import TaskTitle from '../components/TaskTitle';
 import UndoRemoveToast from '../components/UndoRemoveToast';
 import TaskContext from '../state/task.context';
-import {
-  restoreState,
-  TASK_INITIAL_STATE,
-  updateTilte,
-} from '../state/task.reducer';
+import { restoreState } from '../state/task.reducer';
 
 export default function TaskPage() {
   const { state, dispatch } = useContext(TaskContext);
@@ -56,14 +54,46 @@ export default function TaskPage() {
           backgroundColor: themeState.theme.backgroundColor,
         }}
       >
-        <TaskTitle />
-        {!listIsEmpty ? (
-          state.tasks.map((el) => (
-            <TaskItem doneEffectTime={100} key={el.id} task={el} />
-          ))
-        ) : (
-          <EmptyList />
-        )}
+        <View
+          style={{
+            paddingHorizontal: 24,
+          }}
+        >
+          <TaskTitle />
+          {listIsEmpty && state.doneTasks.length === 0 ? (
+            <EmptyList />
+          ) : (
+            state.tasks.map((el) => (
+              <TaskItem doneEffectTime={100} key={el.id} task={el} />
+            ))
+          )}
+        </View>
+        <View
+          style={{
+            borderBottomColor: themeState.theme.disabled,
+            borderBottomWidth: 1,
+            marginTop: 8,
+            marginBottom: 16,
+          }}
+        />
+        <View
+          style={{
+            paddingHorizontal: 24,
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 18,
+              color: themeState.theme.contrast,
+              marginBottom: 12,
+            }}
+          >
+            Completed ({state.doneTasks.length})
+          </Text>
+          {state.doneTasks.map((el) => (
+            <TaskItem doneEffectTime={100} key={'done-' + el.id} task={el} />
+          ))}
+        </View>
       </ScrollView>
       <TaskFooter />
       {state.isUndoModalOpen && <UndoRemoveToast />}

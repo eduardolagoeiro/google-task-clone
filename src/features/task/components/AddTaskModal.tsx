@@ -72,9 +72,11 @@ export default function AddTaskModal() {
             setTimeout(() => {
               dispatch(
                 addTask({
+                  id: parseInt(Math.random().toFixed(10).substring(2)),
                   value: newTaskText,
                   done: false,
-                  id: parseInt(Math.random().toFixed(10).substring(2)),
+                  createdAt: new Date(),
+                  doneAt: null,
                 })
               );
             }, 200);

@@ -1,6 +1,8 @@
 interface Task {
   value: string;
   done: boolean;
+  createdAt: Date;
+  doneAt: Date | null;
   id: number;
 }
 
@@ -11,8 +13,8 @@ type TaskReducerActionType =
   | 'OPEN_UNDO_MODAL'
   | 'CLOSE_UNDO_MODAL'
   | 'ADD_TASK'
-  | 'REMOVE_TASK'
-  | 'UNDO_REMOVE_TASK'
+  | 'DONE_TASK'
+  | 'UNDO_DONE_TASK'
   | 'OPEN_BULLET_MENU'
   | 'CLOSE_BULLET_MENU'
   | 'OPEN_RENAME_TITLE'
@@ -27,11 +29,13 @@ interface TaskReducerAction {
 interface TaskState {
   title: string;
   tasks: Task[];
+  undoTasks: Task[] | null;
+  doneTasks: Task[];
+  undoDoneTasks: Task[] | null;
+  toDoneTasks: Task[];
   isAddModalOpen: boolean;
   isUndoModalOpen: boolean;
   undoHideTimeout: NodeJS.Timeout | null;
-  removedTasks: Task[];
-  undoTasks: Task[] | null;
   isBulletMenuOpen: boolean;
   isRenameModalOpen: boolean;
 }

@@ -36,11 +36,11 @@ export default function UndoRemoveToast() {
           color: themeState.theme.backgroundColor,
         }}
       >
-        {state.removedTasks.length} task(s) done
+        {state.toDoneTasks.length} task(s) done
       </Text>
       <Pressable
         hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-        onPress={() => dispatch({ type: 'UNDO_REMOVE_TASK' })}
+        onPress={() => dispatch({ type: 'UNDO_DONE_TASK' })}
       >
         <Text
           style={{
