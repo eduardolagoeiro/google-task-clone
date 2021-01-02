@@ -29,7 +29,7 @@ yarn start
 * [ ] todo date
 * [ ] todo subtodo
 * [ ] pan gesture to reoder
-* [ ] slide gesture to remove
+* [x] slide gesture to remove
 * [ ] bullet menu task order
 * [ ] burger menu account (firebase?)
 * [ ] sync with remote db
