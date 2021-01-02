@@ -5,7 +5,6 @@ import {
   TouchableHighlight,
   LayoutAnimation,
   Animated,
-  DeviceEventEmitter,
 } from 'react-native';
 import ArrowDown from '../../icons/components/ArrowDown';
 import { NamedColors } from '../../theme/Colors';

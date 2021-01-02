@@ -1,7 +1,6 @@
 import React, { useContext } from 'react';
-import { Text, TouchableHighlight } from 'react-native';
+import { TouchableHighlight } from 'react-native';
 import ThemeContext from '../../theme/state/theme.context';
-import TaskContext from '../state/task.context';
 
 export default function BulletMenuItem(props: {
   children: JSX.Element;

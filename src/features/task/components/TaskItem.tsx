@@ -34,17 +34,39 @@ function TaskItem(props: TaskItemProps) {
   const initColor = NamedColors.Gray500;
   const finalColor = themeState.theme.primary;
   const [iconColor, setIconColor] = useState<string>(initColor);
+  const [percentageDone, setPercentageDone] = useState(false);
 
-  const [swipePercentage, setSwipePercentage] = useState(0);
+  const [swipePercentage, setSwipePercentage] = useState(
+    props.task.done ? 100 : 0
+  );
+
+  function getPercentageFromLength(value: number) {
+    return parseInt(((value / maxWidth) * 100).toFixed(0));
+  }
 
   xTransformAnim.addListener(({ value }) => {
-    const newSwipePercentage = parseInt(((value / maxWidth) * 100).toFixed(0));
-    if (swipePercentage !== newSwipePercentage) {
-      setSwipePercentage(newSwipePercentage);
+    if (!percentageDone) {
+      const newSwipePercentage = getPercentageFromLength(value);
+      if (swipePercentage !== newSwipePercentage) {
+        setSwipePercentage(newSwipePercentage);
+      }
     }
   });
 
   useEffect(() => {
+    if (props.task.done && doneEffect) {
+      if (swipePercentage > 0) {
+        setTimeout(() => {
+          console.log('timeout', swipePercentage);
+          setSwipePercentage(swipePercentage - 20);
+        }, 5);
+      } else {
+        dispatch({
+          type: 'UNDO_DONE_TASK',
+          payload: { task: props.task },
+        });
+      }
+    }
     const newColor = findColorBetween(
       initColor,
       finalColor,
@@ -53,10 +75,16 @@ function TaskItem(props: TaskItemProps) {
     setIconColor(newColor);
   }, [swipePercentage]);
 
+  useEffect(() => {
+    if (percentageDone) {
+      setDoneEffect(true);
+    }
+  }, [percentageDone]);
+
   const panResponder = useRef(
     PanResponder.create({
       onMoveShouldSetPanResponder: () => {
-        return true;
+        return !props.task.done;
       },
       onPanResponderGrant: () => {
         Animated.timing(xTransformAnim, {
@@ -74,18 +102,28 @@ function TaskItem(props: TaskItemProps) {
           }).start();
         }
       },
-      onPanResponderRelease: () => {
-        Animated.timing(xTransformAnim, {
-          toValue: 0,
-          duration: 300,
-          useNativeDriver: true,
-        }).start();
+      onPanResponderRelease: (evt, gestureState) => {
+        const isDone = getPercentageFromLength(gestureState.dx) > 50;
+        setPercentageDone(isDone);
+        if (!isDone) {
+          Animated.timing(xTransformAnim, {
+            toValue: 0,
+            duration: 300,
+            useNativeDriver: true,
+          }).start();
+        } else {
+          Animated.timing(xTransformAnim, {
+            toValue: Dimensions.get('window').width,
+            duration: 300,
+            useNativeDriver: true,
+          }).start();
+        }
       },
     })
   ).current;
 
   useEffect(() => {
-    if (doneEffect) {
+    if (doneEffect && !props.task.done) {
       setTimeout(() => {
         dispatch(
           removeTask(
@@ -94,21 +132,28 @@ function TaskItem(props: TaskItemProps) {
           )
         );
       }, props.doneEffectTime);
+    } else if (doneEffect && props.task.done) {
+      setSwipePercentage(swipePercentage - 1);
     }
   }, [doneEffect]);
   return (
-    <Animated.View
+    <View
       style={{
-        transform: [{ translateX: xTransformAnim }],
+        backgroundColor: themeState.theme.primary,
       }}
-      {...panResponder.panHandlers}
     >
-      <TouchableHighlight
-        underlayColor={themeState.theme.highlightGrayUnderlay}
-        onPress={() => {}}
+      <Animated.View
+        style={{
+          transform: [{ translateX: xTransformAnim }],
+          backgroundColor: themeState.theme.backgroundColor,
+        }}
+        {...panResponder.panHandlers}
       >
-        <View style={styles.wrapper}>
-          {!props.task.done ? (
+        <TouchableHighlight
+          underlayColor={themeState.theme.highlightGrayUnderlay}
+          onPress={() => {}}
+        >
+          <View style={styles.wrapper}>
             <TouchableWithoutFeedback
               onPress={() => {
                 setDoneEffect(true);
@@ -116,7 +161,7 @@ function TaskItem(props: TaskItemProps) {
               hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
             >
               <View style={{ marginRight: 18 }}>
-                {doneEffect ? (
+                {doneEffect && !props.task.done ? (
                   <ExplosionEffect
                     explosionRadius={10}
                     explosionTime={props.doneEffectTime}
@@ -128,7 +173,11 @@ function TaskItem(props: TaskItemProps) {
                   <MagicCheck
                     color={iconColor}
                     percentage={
-                      swipePercentage * 2 < 100 ? swipePercentage * 2 : 100
+                      props.task.done
+                        ? swipePercentage
+                        : swipePercentage * 2 < 100
+                        ? swipePercentage * 2
+                        : 100
                     }
                     height={24}
                     width={24}
@@ -136,42 +185,30 @@ function TaskItem(props: TaskItemProps) {
                 )}
               </View>
             </TouchableWithoutFeedback>
-          ) : (
-            <TouchableWithoutFeedback
-              onPress={() => {
-                dispatch({
-                  type: 'UNDO_DONE_TASK',
-                  payload: { task: props.task },
-                });
+            <View
+              style={{
+                flex: 1,
+                alignItems: 'flex-start',
               }}
-              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
             >
-              <View style={{ marginRight: 18 }}>
-                <Check width={20} height={20} color="#2373E6"></Check>
-              </View>
-            </TouchableWithoutFeedback>
-          )}
-          <View
-            style={{
-              flex: 1,
-              alignItems: 'flex-start',
-            }}
-          >
-            <Text
-              style={[
-                styles.text,
-                {
-                  color: themeState.theme.contrast,
-                  textDecorationLine: props.task.done ? 'line-through' : 'none',
-                },
-              ]}
-            >
-              {props.task.value}
-            </Text>
+              <Text
+                style={[
+                  styles.text,
+                  {
+                    color: themeState.theme.contrast,
+                    textDecorationLine: props.task.done
+                      ? 'line-through'
+                      : 'none',
+                  },
+                ]}
+              >
+                {props.task.value}
+              </Text>
+            </View>
           </View>
-        </View>
-      </TouchableHighlight>
-    </Animated.View>
+        </TouchableHighlight>
+      </Animated.View>
+    </View>
   );
 }
 
