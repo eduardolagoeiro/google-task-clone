@@ -93,7 +93,7 @@ function TaskItem(props: TaskItemProps) {
           useNativeDriver: true,
         }).start();
       },
-      onPanResponderMove: (evt, gestureState) => {
+      onPanResponderMove: (_, gestureState) => {
         if (gestureState.dx > 0 && gestureState.dx < maxWidth) {
           Animated.timing(xTransformAnim, {
             toValue: gestureState.dx,
@@ -102,7 +102,7 @@ function TaskItem(props: TaskItemProps) {
           }).start();
         }
       },
-      onPanResponderRelease: (evt, gestureState) => {
+      onPanResponderRelease: (_, gestureState) => {
         const isDone = getPercentageFromLength(gestureState.dx) > 50;
         setPercentageDone(isDone);
         if (!isDone) {
