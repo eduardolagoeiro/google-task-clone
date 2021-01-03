@@ -54,16 +54,6 @@ export default function BulletMenuView() {
         </View>
       </BulletMenuItem>
       <BulletMenuItem
-        onPress={() => {
-          dispatch({ type: 'CLOSE_BULLET_MENU' });
-          dispatch({ type: 'OPEN_RENAME_TITLE' });
-        }}
-      >
-        <Text style={[styles.menuItemText, { color: themeState.theme.text }]}>
-          Rename title
-        </Text>
-      </BulletMenuItem>
-      <BulletMenuItem
         disabled={state.doneTasks.length === 0}
         onPress={() => {
           dispatch({ type: 'CLOSE_BULLET_MENU' });
