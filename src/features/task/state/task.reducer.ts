@@ -39,6 +39,13 @@ const taskReducerHandlerMap: Record<
       ...state,
       tasks,
       undoTasks,
+      taskListMap: {
+        ...state.taskListMap,
+        [state.title]: {
+          tasks,
+          doneTasks: state.doneTasks,
+        },
+      },
     };
   },
   DONE_TASK: (state, action) => {
@@ -61,6 +68,13 @@ const taskReducerHandlerMap: Record<
       toDoneTasks: [...state.toDoneTasks, action.payload.task],
       undoTasks: state.undoTasks || state.tasks,
       undoDoneTasks,
+      taskListMap: {
+        ...state.taskListMap,
+        [state.title]: {
+          tasks,
+          doneTasks,
+        },
+      },
     };
   },
   UNDO_DONE_TASK: (state, action) => {
@@ -69,28 +83,53 @@ const taskReducerHandlerMap: Record<
         (el) => el.id !== action.payload.task.id
       );
       LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+      const tasks = [{ ...action.payload.task, done: false }, ...state.tasks];
       return {
         ...state,
         doneTasks,
-        tasks: [{ ...action.payload.task, done: false }, ...state.tasks],
+        tasks,
+        taskListMap: {
+          ...state.taskListMap,
+          [state.title]: {
+            tasks,
+            doneTasks,
+          },
+        },
       };
     }
     if (state.undoHideTimeout) clearTimeout(state.undoHideTimeout);
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    const tasks = state.undoTasks || [];
+    const doneTasks = state.undoDoneTasks || [];
     return {
       ...state,
-      tasks: state.undoTasks || [],
-      doneTasks: state.undoDoneTasks || [],
+      tasks,
+      doneTasks,
       toDoneTasks: [],
       undoTasks: null,
       undoDoneTasks: null,
       undoHideTimeout: null,
       isUndoModalOpen: false,
+      taskListMap: {
+        ...state.taskListMap,
+        [state.title]: {
+          tasks,
+          doneTasks,
+        },
+      },
     };
   },
   CLOSE_BULLET_MENU: (state) => ({ ...state, isBulletMenuOpen: false }),
   OPEN_BULLET_MENU: (state) => ({ ...state, isBulletMenuOpen: true }),
-  UPDATE_TITLE: (state, action) => ({ ...state, title: action.payload }),
+  UPDATE_TITLE: (state, action) => {
+    const newTitle = action.payload;
+    const taskListMap = {
+      ...state.taskListMap,
+    };
+    taskListMap[newTitle] = taskListMap[state.title];
+    delete taskListMap[state.title];
+    return { ...state, title: newTitle, taskListMap };
+  },
   OPEN_RENAME_TITLE: (state) => ({ ...state, isRenameModalOpen: true }),
   CLOSE_RENAME_TITLE: (state) => {
     return { ...state, isRenameModalOpen: false };
@@ -100,6 +139,13 @@ const taskReducerHandlerMap: Record<
     return {
       ...state,
       doneTasks: [],
+      taskListMap: {
+        ...state.taskListMap,
+        [state.title]: {
+          tasks: state.tasks,
+          doneTasks: [],
+        },
+      },
     };
   },
 };
@@ -155,13 +201,23 @@ export function updateTilte(newTitle: string): TaskReducerAction {
   };
 }
 
+const INITIAL_TASKS: Task[] = [];
+
+const INITIAL_TITLE = 'Task List';
+
 export const TASK_INITIAL_STATE: TaskState = {
-  tasks: [],
+  taskListMap: {
+    [INITIAL_TITLE]: {
+      tasks: INITIAL_TASKS,
+      doneTasks: [],
+    },
+  },
+  tasks: INITIAL_TASKS,
   undoTasks: null,
   doneTasks: [],
   undoDoneTasks: null,
   toDoneTasks: [],
-  title: '',
+  title: INITIAL_TITLE,
   isAddModalOpen: false,
   isUndoModalOpen: false,
   undoHideTimeout: null,

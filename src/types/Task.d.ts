@@ -29,6 +29,13 @@ interface TaskReducerAction {
 
 interface TaskState {
   title: string;
+  taskListMap: Record<
+    string,
+    {
+      tasks: Task[];
+      doneTasks: Task[];
+    }
+  >;
   tasks: Task[];
   undoTasks: Task[] | null;
   doneTasks: Task[];

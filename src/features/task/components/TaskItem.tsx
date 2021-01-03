@@ -57,7 +57,6 @@ function TaskItem(props: TaskItemProps) {
     if (props.task.done && doneEffect) {
       if (swipePercentage > 0) {
         setTimeout(() => {
-          console.log('timeout', swipePercentage);
           setSwipePercentage(swipePercentage - 20);
         }, 5);
       } else {
