@@ -1,4 +1,4 @@
-import React, { memo, useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -8,6 +8,8 @@ import {
   Animated,
   PanResponder,
   Dimensions,
+  PanResponderGestureState,
+  LayoutRectangle,
 } from 'react-native';
 import Check from '../../icons/components/Check';
 import TaskContext from '../state/task.context';
@@ -21,13 +23,18 @@ import { findColorBetween } from '../../../util/Color';
 interface TaskItemProps {
   task: Task;
   doneEffectTime: number;
+  reorderTo?: (index: number) => void;
+  index?: number;
+  total?: number;
+  downOne?: boolean;
 }
 
-function TaskItem(props: TaskItemProps) {
+export default function TaskItem(props: TaskItemProps) {
   const [doneEffect, setDoneEffect] = useState(false);
   const { dispatch } = useContext(TaskContext);
   const { state: themeState } = useContext(ThemeContext);
   const [xTransformAnim] = useState(new Animated.Value(0));
+  const [yTransformAnim] = useState(new Animated.Value(0));
 
   const maxWidth = (Dimensions.get('window').width / 5) * 3;
 
@@ -80,46 +87,96 @@ function TaskItem(props: TaskItemProps) {
     }
   }, [percentageDone]);
 
-  const panResponder = useRef(
-    PanResponder.create({
-      onMoveShouldSetPanResponder: () => {
-        return !props.task.done;
-      },
-      onPanResponderGrant: () => {
-        Animated.timing(xTransformAnim, {
-          toValue: 0,
-          duration: 0,
-          useNativeDriver: true,
-        }).start();
-      },
-      onPanResponderMove: (_, gestureState) => {
-        if (gestureState.dx > 0 && gestureState.dx < maxWidth) {
-          Animated.timing(xTransformAnim, {
-            toValue: gestureState.dx,
-            duration: 0,
-            useNativeDriver: true,
-          }).start();
-        }
-      },
-      onPanResponderRelease: (_, gestureState) => {
-        const isDone = getPercentageFromLength(gestureState.dx) > 50;
-        setPercentageDone(isDone);
-        if (!isDone) {
-          Animated.timing(xTransformAnim, {
-            toValue: 0,
-            duration: 300,
-            useNativeDriver: true,
-          }).start();
-        } else {
-          Animated.timing(xTransformAnim, {
-            toValue: Dimensions.get('window').width,
-            duration: 300,
-            useNativeDriver: true,
-          }).start();
-        }
-      },
-    })
-  ).current;
+  let isHorizontalMoving: boolean | null = null;
+
+  const [layout, setLayout] = useState<LayoutRectangle | null>(null);
+
+  let reorder: { newIndex: number | null } = {
+    newIndex: null,
+  };
+
+  function moveVertical(gestureState: PanResponderGestureState) {
+    if (layout && props.index !== undefined && props.total !== undefined) {
+      const minYTo = -layout.y;
+      const maxYTo = layout.height * (props.total - props.index - 1);
+      const dy =
+        gestureState.dy > maxYTo || gestureState.dy < minYTo
+          ? gestureState.dy > maxYTo
+            ? maxYTo
+            : minYTo
+          : gestureState.dy;
+      Animated.timing(yTransformAnim, {
+        toValue: dy,
+        duration: 0,
+        useNativeDriver: true,
+      }).start();
+
+      const newIndex = Math.ceil(
+        ((dy - minYTo) / (maxYTo - minYTo)) * (props.total - 1)
+      );
+      if (newIndex !== props.index && reorder.newIndex !== newIndex) {
+        reorder.newIndex = newIndex;
+        props.reorderTo && props.reorderTo(newIndex);
+      }
+    }
+  }
+
+  const [isHorizontalMovingState, setIsHorizontalMoving] = useState<
+    boolean | null
+  >(null);
+
+  const panResponder = useMemo(
+    () =>
+      PanResponder.create({
+        onMoveShouldSetPanResponder: () => {
+          return !props.task.done;
+        },
+        onPanResponderMove: (_, gestureState) => {
+          if (isHorizontalMoving === null) {
+            isHorizontalMoving = gestureState.dx > 0;
+            setIsHorizontalMoving(isHorizontalMoving);
+          }
+          if (isHorizontalMoving) {
+            if (gestureState.dx > 0 && gestureState.dx < maxWidth) {
+              Animated.timing(xTransformAnim, {
+                toValue: gestureState.dx,
+                duration: 0,
+                useNativeDriver: true,
+              }).start();
+            }
+          } else {
+            moveVertical(gestureState);
+          }
+        },
+        onPanResponderRelease: (_, gestureState) => {
+          const isDone = !!(
+            isHorizontalMoving && getPercentageFromLength(gestureState.dx) > 50
+          );
+          isHorizontalMoving = null;
+          setIsHorizontalMoving(null);
+          setPercentageDone(isDone);
+          if (!isDone) {
+            Animated.timing(xTransformAnim, {
+              toValue: 0,
+              duration: 300,
+              useNativeDriver: true,
+            }).start();
+            Animated.timing(yTransformAnim, {
+              toValue: 0,
+              duration: isHorizontalMoving ? 0 : 150,
+              useNativeDriver: true,
+            }).start();
+          } else {
+            Animated.timing(xTransformAnim, {
+              toValue: Dimensions.get('window').width,
+              duration: 300,
+              useNativeDriver: true,
+            }).start();
+          }
+        },
+      }),
+    [props.index, props.total, layout]
+  );
 
   useEffect(() => {
     if (doneEffect && !props.task.done) {
@@ -137,14 +194,26 @@ function TaskItem(props: TaskItemProps) {
   }, [doneEffect]);
   return (
     <View
+      onLayout={(evt) => {
+        setLayout(evt.nativeEvent.layout);
+      }}
       style={{
-        backgroundColor: themeState.theme.primary,
+        backgroundColor: 'transparent',
+        // backgroundColor: isHorizontalMovingState
+        //   ? themeState.theme.primary
+        //   : themeState.theme.backgroundColor,
       }}
     >
       <Animated.View
         style={{
-          transform: [{ translateX: xTransformAnim }],
-          backgroundColor: themeState.theme.backgroundColor,
+          transform: [
+            { translateX: xTransformAnim },
+            { translateY: yTransformAnim },
+          ],
+          backgroundColor: 'transparent',
+          // backgroundColor: isHorizontalMovingState
+          //   ? themeState.theme.backgroundColor
+          //   : 'transparent',
         }}
         {...panResponder.panHandlers}
       >
@@ -210,10 +279,6 @@ function TaskItem(props: TaskItemProps) {
     </View>
   );
 }
-
-export default memo(TaskItem, (prevProps, nextProps) => {
-  return prevProps.task.id !== nextProps.task.id;
-});
 
 const styles = StyleSheet.create({
   wrapper: {

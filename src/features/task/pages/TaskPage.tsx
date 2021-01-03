@@ -16,7 +16,7 @@ import DoneTaskView from '../components/DoneTaskView';
 import EmptyList from '../components/EmptyList';
 import RenameTitleModal from '../components/RenameTitleModal';
 import TaskFooter from '../components/TaskFooter';
-import TaskItem from '../components/TaskItem';
+import TaskList from '../components/TaskList';
 import TaskTitle from '../components/TaskTitle';
 import UndoRemoveToast from '../components/UndoRemoveToast';
 import TaskContext from '../state/task.context';
@@ -66,9 +66,7 @@ export default function TaskPage() {
         {listIsEmpty && state.doneTasks.length === 0 ? (
           <EmptyList />
         ) : (
-          state.tasks.map((el) => (
-            <TaskItem doneEffectTime={100} key={el.id} task={el} />
-          ))
+          <TaskList />
         )}
         {state.doneTasks.length > 0 && (
           <>
