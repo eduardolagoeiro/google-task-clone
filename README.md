@@ -22,14 +22,15 @@ yarn start
 * [x] global state
 * [x] menu click
 * [x] undo task
-* [ ] add new list (persist multiple lists)
+* [x] add new list (persist multiple lists)
 * [x] rename list
-* [ ] delete list
+* [x] delete list
 * [ ] todo comment
 * [ ] todo date
 * [ ] todo subtodo
 * [ ] pan gesture to reoder
 * [x] slide gesture to remove
+* [ ] internationalization
 * [ ] bullet menu task order
 * [ ] burger menu account (firebase?)
 * [ ] sync with remote db

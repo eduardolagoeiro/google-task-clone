@@ -76,7 +76,6 @@ export default function BulletMenuView() {
           style={[
             styles.menuItemText,
             {
-              paddingBottom: 20,
               color:
                 state.doneTasks.length === 0
                   ? themeState.theme.disabled
@@ -85,6 +84,24 @@ export default function BulletMenuView() {
           ]}
         >
           Remove done tasks
+        </Text>
+      </BulletMenuItem>
+      <BulletMenuItem
+        onPress={() => {
+          dispatch({ type: 'RESET' });
+          dispatch({ type: 'CLOSE_BULLET_MENU' });
+        }}
+      >
+        <Text
+          style={[
+            styles.menuItemText,
+            {
+              paddingBottom: 20,
+              color: 'red',
+            },
+          ]}
+        >
+          Reset app
         </Text>
       </BulletMenuItem>
     </View>

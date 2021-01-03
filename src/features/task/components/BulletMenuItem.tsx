@@ -5,7 +5,7 @@ import ThemeContext from '../../theme/state/theme.context';
 export default function BulletMenuItem(props: {
   children: JSX.Element;
   paddingTop?: number;
-  onPress: () => void;
+  onPress?: () => void;
   disabled?: boolean;
 }) {
   const { state: themeState } = useContext(ThemeContext);

@@ -17,14 +17,25 @@ type TaskReducerActionType =
   | 'UNDO_DONE_TASK'
   | 'OPEN_BULLET_MENU'
   | 'CLOSE_BULLET_MENU'
+  | 'OPEN_BURGER_MENU'
+  | 'CLOSE_BURGER_MENU'
   | 'OPEN_RENAME_TITLE'
   | 'CLOSE_RENAME_TITLE'
   | 'UPDATE_TITLE'
-  | 'REMOVE_DONE_TASK';
+  | 'REMOVE_DONE_TASK'
+  | 'CHANGE_LIST'
+  | 'CREATE_NEW_LIST'
+  | 'RESET'
+  | 'DELETE_LIST';
 
 interface TaskReducerAction {
   type: TaskReducerActionType;
-  payload?: any;
+  payload?: {
+    task?: Task;
+    title?: string;
+    undoHideTimeout?: NodeJS.Timeout;
+    lastState?: TaskState;
+  };
 }
 
 interface TaskState {
@@ -46,6 +57,7 @@ interface TaskState {
   undoHideTimeout: NodeJS.Timeout | null;
   isBulletMenuOpen: boolean;
   isRenameModalOpen: boolean;
+  isBurgerMenuOpen: boolean;
 }
 
 type TaskReducerHandler = (
