@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import {
   View,
   Text,
@@ -27,6 +27,7 @@ interface TaskItemProps {
   index?: number;
   total?: number;
   downOne?: boolean;
+  offset?: 1 | 0 | -1;
 }
 
 export default function TaskItem(props: TaskItemProps) {
@@ -114,7 +115,7 @@ export default function TaskItem(props: TaskItemProps) {
       const newIndex = Math.ceil(
         ((dy - minYTo) / (maxYTo - minYTo)) * (props.total - 1)
       );
-      if (newIndex !== props.index && reorder.newIndex !== newIndex) {
+      if (reorder.newIndex !== newIndex) {
         reorder.newIndex = newIndex;
         props.reorderTo && props.reorderTo(newIndex);
       }
@@ -149,6 +150,21 @@ export default function TaskItem(props: TaskItemProps) {
           }
         },
         onPanResponderRelease: (_, gestureState) => {
+          let isReordering = false;
+          if (props.index !== undefined && reorder.newIndex !== null) {
+            if (reorder.newIndex !== props.index) {
+              isReordering = true;
+              dispatch({
+                type: 'REORDER_TASK_LIST',
+                payload: {
+                  fromIndex: props.index,
+                  toIndex: reorder.newIndex,
+                },
+              });
+            }
+            reorder.newIndex = null;
+            props.reorderTo && props.reorderTo(props.index);
+          }
           const isDone = !!(
             isHorizontalMoving && getPercentageFromLength(gestureState.dx) > 50
           );
@@ -163,7 +179,7 @@ export default function TaskItem(props: TaskItemProps) {
             }).start();
             Animated.timing(yTransformAnim, {
               toValue: 0,
-              duration: isHorizontalMoving ? 0 : 150,
+              duration: isHorizontalMoving ? 0 : isReordering ? 0 : 5000,
               useNativeDriver: true,
             }).start();
           } else {
@@ -192,12 +208,19 @@ export default function TaskItem(props: TaskItemProps) {
       setSwipePercentage(swipePercentage - 1);
     }
   }, [doneEffect]);
+
+  const offset = useMemo(() => {
+    return (
+      (props.offset && layout && layout.height * props.offset) || undefined
+    );
+  }, [props.offset, layout]);
   return (
     <View
       onLayout={(evt) => {
         setLayout(evt.nativeEvent.layout);
       }}
       style={{
+        top: offset,
         backgroundColor: 'transparent',
         // backgroundColor: isHorizontalMovingState
         //   ? themeState.theme.primary

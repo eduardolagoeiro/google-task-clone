@@ -275,6 +275,37 @@ const taskReducerHandlerMap: Record<
     }
     return state;
   },
+  REORDER_TASK_LIST: (state, action) => {
+    if (
+      action.payload?.toIndex !== action.payload?.fromIndex &&
+      action.payload?.fromIndex !== undefined &&
+      action.payload?.toIndex !== undefined
+    ) {
+      const { toIndex, fromIndex } = action.payload;
+      const newTasks: Task[] = [];
+      const diff = fromIndex - toIndex;
+      for (let i = 0; i < state.tasks.length; i++) {
+        const task = state.tasks[i];
+        if (diff > 0 && i === toIndex) {
+          newTasks.push(state.tasks[fromIndex]);
+        }
+        if (i !== fromIndex) {
+          newTasks.push(task);
+        }
+        if (diff < 0 && i === toIndex) {
+          newTasks.push(state.tasks[fromIndex]);
+        }
+      }
+      if (fromIndex >= 0 && toIndex < state.tasks.length) {
+        // LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+        return {
+          ...state,
+          tasks: newTasks,
+        };
+      }
+    }
+    return state;
+  },
 };
 
 export const TaskReducer = (

@@ -26,7 +26,8 @@ type TaskReducerActionType =
   | 'CHANGE_LIST'
   | 'CREATE_NEW_LIST'
   | 'RESET'
-  | 'DELETE_LIST';
+  | 'DELETE_LIST'
+  | 'REORDER_TASK_LIST';
 
 interface TaskReducerAction {
   type: TaskReducerActionType;
@@ -35,6 +36,8 @@ interface TaskReducerAction {
     title?: string;
     undoHideTimeout?: NodeJS.Timeout;
     lastState?: TaskState;
+    fromIndex?: number;
+    toIndex?: number;
   };
 }
 
