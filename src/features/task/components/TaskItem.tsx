@@ -23,7 +23,7 @@ import { findColorBetween } from '../../../util/Color';
 interface TaskItemProps {
   task: Task;
   doneEffectTime: number;
-  reorderTo?: (index: number) => void;
+  reorderTo?: (index: number, animate?: boolean) => void;
   index?: number;
   total?: number;
   downOne?: boolean;
@@ -163,7 +163,7 @@ export default function TaskItem(props: TaskItemProps) {
               });
             }
             reorder.newIndex = null;
-            props.reorderTo && props.reorderTo(props.index);
+            props.reorderTo && props.reorderTo(props.index, false);
           }
           const isDone = !!(
             isHorizontalMoving && getPercentageFromLength(gestureState.dx) > 50
@@ -179,7 +179,7 @@ export default function TaskItem(props: TaskItemProps) {
             }).start();
             Animated.timing(yTransformAnim, {
               toValue: 0,
-              duration: isHorizontalMoving ? 0 : isReordering ? 0 : 5000,
+              duration: isHorizontalMoving ? 0 : isReordering ? 0 : 150,
               useNativeDriver: true,
             }).start();
           } else {
@@ -221,10 +221,9 @@ export default function TaskItem(props: TaskItemProps) {
       }}
       style={{
         top: offset,
-        backgroundColor: 'transparent',
-        // backgroundColor: isHorizontalMovingState
-        //   ? themeState.theme.primary
-        //   : themeState.theme.backgroundColor,
+        backgroundColor: isHorizontalMovingState
+          ? themeState.theme.primary
+          : 'transparent',
       }}
     >
       <Animated.View
@@ -233,10 +232,9 @@ export default function TaskItem(props: TaskItemProps) {
             { translateX: xTransformAnim },
             { translateY: yTransformAnim },
           ],
-          backgroundColor: 'transparent',
-          // backgroundColor: isHorizontalMovingState
-          //   ? themeState.theme.backgroundColor
-          //   : 'transparent',
+          backgroundColor: isHorizontalMovingState
+            ? themeState.theme.backgroundColor
+            : 'transparent',
         }}
         {...panResponder.panHandlers}
       >

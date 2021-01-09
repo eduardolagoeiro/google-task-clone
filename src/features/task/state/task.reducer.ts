@@ -297,7 +297,6 @@ const taskReducerHandlerMap: Record<
         }
       }
       if (fromIndex >= 0 && toIndex < state.tasks.length) {
-        // LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
         return {
           ...state,
           tasks: newTasks,

@@ -39,15 +39,17 @@ export default function TaskList() {
       {state.tasks.map((el, i) => (
         <TaskItem
           key={'task-not-done-' + el.id}
-          doneEffectTime={100}
+          doneEffectTime={200}
           offset={top(reorder, i)}
           task={el}
           index={i}
           total={state.tasks.length}
-          reorderTo={(index) => {
-            // LayoutAnimation.configureNext(
-            //   LayoutAnimation.Presets.easeInEaseOut
-            // );
+          reorderTo={(index, animate) => {
+            if (animate !== false) {
+              LayoutAnimation.configureNext(
+                LayoutAnimation.Presets.easeInEaseOut
+              );
+            }
             if (index !== i) {
               setReorder({
                 fromIndex: i,
@@ -56,13 +58,6 @@ export default function TaskList() {
             } else {
               setReorder(null);
             }
-            // dispatch({
-            //   type: 'REORDER_TASK_LIST',
-            //   payload: {
-            //     fromIndex: i,
-            //     toIndex: index,
-            //   },
-            // });
           }}
         />
       ))}
